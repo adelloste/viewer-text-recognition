@@ -11,10 +11,14 @@ const Controls = () => {
     <Stack
       direction="column"
       spacing={1}
-      style={{
+      sx={{
         position: 'absolute',
         right: '1.25rem',
-        top: '1.25rem'
+        top: '1.25rem',
+        backgroundColor: 'hsla(0,0%,47.8%,.3)',
+        '& .MuiButtonBase-root': {
+          display: 'inline-flex !important'
+        }
       }}
     >
       <IconButton id="osd-zoom-in" aria-label="zoom in" color="primary">
