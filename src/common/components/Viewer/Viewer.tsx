@@ -45,7 +45,14 @@ const Viewer = ({ resource }: Props) => {
             cornerColor: 'blue',
             cornerStyle: 'circle',
             selectable: false,
-            evented: false
+            hoverCursor: 'pointer',
+            name: `segmentation-${annotation.id}`
+          });
+          // observe mousedown event
+          polygon.on('mousedown', e => {
+            if (e.target) {
+              console.log(e.target.name);
+            }
           });
           // add polygon
           overlay.fabricCanvas().add(polygon);
