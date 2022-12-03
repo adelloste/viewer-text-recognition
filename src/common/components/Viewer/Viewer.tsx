@@ -15,14 +15,15 @@ const Viewer = ({ resource }: Props) => {
   useEffect(() => {
     const viewer = OpenSeadragon({
       id: 'osd-viewer',
-      // debugMode: true,
+      debugMode: false,
       zoomInButton: 'osd-zoom-in',
       zoomOutButton: 'osd-zoom-out',
       homeButton: 'osd-home',
       fullPageButton: 'osd-fulls',
       tileSources: {
         type: 'image',
-        url: '/images/document-01.jpg'
+        url: '/images/document-01.jpg',
+        buildPyramid: false
       }
     });
 
