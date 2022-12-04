@@ -23,7 +23,12 @@ const Viewer = ({ resource }: Props) => {
       tileSources: {
         type: 'image',
         url: '/images/document-01.jpg',
-        buildPyramid: false
+        buildPyramid: false,
+        width: resource.images[0].width,
+        height: resource.images[0].height
+      },
+      gestureSettingsMouse: {
+        clickToZoom: false
       }
     });
 
@@ -52,7 +57,18 @@ const Viewer = ({ resource }: Props) => {
           // observe mousedown event
           polygon.on('mousedown', e => {
             if (e.target) {
-              console.log(e.target.name);
+              // center the clicked polygon
+              if (e.target.aCoords) {
+                const overlay = viewer.viewport.imageToViewportRectangle(
+                  e.target.aCoords.tl.x,
+                  e.target.aCoords.tl.y,
+                  e.target.width,
+                  e.target.height
+                );
+                viewer.viewport.fitBounds(overlay);
+                // alternative
+                // viewer.viewport.panTo(overlay.getCenter());
+              }
             }
           });
           // add polygon
