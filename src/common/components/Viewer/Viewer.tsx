@@ -43,19 +43,24 @@ const Viewer = ({ resource }: Props) => {
         resource.annotations.forEach(annotation => {
           // create polygon
           const polygon = new fabric.Polygon(segmentation(annotation.segmentation), {
-            fill: 'rgba(25,48,96,.1)',
+            // fill: 'rgba(25,48,96,.1)',
+            // stroke: 'green',
+            fill: 'transparent',
+            stroke: 'transparent',
             strokeWidth: 4,
-            stroke: 'green',
             objectCaching: false,
             transparentCorners: false,
             cornerColor: 'blue',
             cornerStyle: 'circle',
             selectable: false,
             hoverCursor: 'pointer',
-            name: `segmentation-${annotation.id}`
+            name: `segmentation-${annotation.id}`,
+            data: {
+              isSelected: false
+            }
           });
           // observe mousedown event
-          polygon.on('mousedown', e => {
+          polygon.on('mousedown', (e: fabric.IEvent<Event>) => {
             if (e.target) {
               // center the clicked polygon
               if (e.target.aCoords) {
@@ -69,10 +74,42 @@ const Viewer = ({ resource }: Props) => {
                 // alternative
                 // viewer.viewport.panTo(bb.getCenter());
               }
+              // get all objects
+              const objs: fabric.Object[] = overlay.fabricCanvas().getObjects();
+              // for every object track event click and update style
+              objs.forEach(o => {
+                if (o.name === e.target?.name) {
+                  o.data.isSelected = true;
+                  o.set('fill', 'rgba(25,48,96,.1)');
+                  o.set('stroke', 'green');
+                } else {
+                  o.data.isSelected = false;
+                  o.set('fill', 'transparent');
+                  o.set('stroke', 'transparent');
+                }
+              });
             }
           });
           // add polygon
           overlay.fabricCanvas().add(polygon);
+
+          overlay.fabricCanvas().on('mouse:over', (e: fabric.IEvent<MouseEvent>) => {
+            if (e.target) {
+              e.target.set('fill', 'rgba(25,48,96,.1)');
+              e.target.set('stroke', 'green');
+              overlay.render();
+            }
+          });
+
+          overlay.fabricCanvas().on('mouse:out', (e: fabric.IEvent<MouseEvent>) => {
+            if (e.target) {
+              if (!e.target.data.isSelected) {
+                e.target.set('fill', 'transparent');
+                e.target.set('stroke', 'transparent');
+                overlay.render();
+              }
+            }
+          });
         });
       });
     });
