@@ -59,15 +59,15 @@ const Viewer = ({ resource }: Props) => {
             if (e.target) {
               // center the clicked polygon
               if (e.target.aCoords) {
-                const overlay = viewer.viewport.imageToViewportRectangle(
+                const bb = viewer.viewport.imageToViewportRectangle(
                   e.target.aCoords.tl.x,
                   e.target.aCoords.tl.y,
                   e.target.width,
                   e.target.height
                 );
-                viewer.viewport.fitBounds(overlay);
+                viewer.viewport.fitBounds(bb);
                 // alternative
-                // viewer.viewport.panTo(overlay.getCenter());
+                // viewer.viewport.panTo(bb.getCenter());
               }
             }
           });
