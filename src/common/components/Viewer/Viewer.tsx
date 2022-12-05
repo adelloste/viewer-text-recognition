@@ -131,7 +131,7 @@ const Viewer = ({ resource }: Props) => {
 
   return (
     <Box style={{ position: 'relative', height: '100%', width: '100%' }}>
-      <Box id="osd-viewer" style={{ height: '100%', width: '100%', background: '#000000' }}></Box>
+      <Box id="osd-viewer" style={{ height: '100%', width: '100%', background: '#363636' }}></Box>
       <Controls />
     </Box>
   );
