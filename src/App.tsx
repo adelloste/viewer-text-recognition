@@ -1,13 +1,12 @@
 import React from 'react';
+import { useRoutes } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Transcript from './features/Transcript/Transcript';
+import { routes } from './common/routes/routes';
 
 const App = () => {
-  return (
-    <Box style={{ width: '100%', height: '100vh' }}>
-      <Transcript />
-    </Box>
-  );
+  const routing = useRoutes(routes);
+
+  return <Box style={{ width: '100%', height: '100vh' }}>{routing}</Box>;
 };
 
 export default App;
