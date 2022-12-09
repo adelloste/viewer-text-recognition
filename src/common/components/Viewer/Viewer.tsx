@@ -258,6 +258,7 @@ const Viewer = ({ resource }: Props) => {
         fabricObject.calcTransformMatrix()
       );
       const actionPerformed = fn(eventData, transform, x, y, pointIndex);
+      const newDim = fabricObject._setPositionDimensions({});
       const polygonBaseSize = getObjectSizeWithStroke(fabricObject);
       const newX =
         (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) / polygonBaseSize.x;
