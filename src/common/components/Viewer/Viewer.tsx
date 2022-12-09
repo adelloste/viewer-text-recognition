@@ -19,9 +19,11 @@ type Props = {
 
 const Viewer = ({ resource }: Props) => {
   const [contextMenu, setContextMenu] = useState<{
+    target: fabric.Polygon;
     mouseX: number;
     mouseY: number;
   } | null>(null);
+  const [overlay, setOverlay] = useState<any | null>(null);
 
   useEffect(() => {
     const viewer = OpenSeadragon({
@@ -51,6 +53,7 @@ const Viewer = ({ resource }: Props) => {
         const overlay = viewer.fabricjsOverlay({
           scale: resource.images[0].width // Maybe should we have one image?
         });
+        setOverlay(overlay);
         // draw polygons for every segmentation
         resource.annotations.forEach(annotation => {
           // create polygon
@@ -71,6 +74,7 @@ const Viewer = ({ resource }: Props) => {
             hoverCursor: 'pointer',
             name: `segmentation-${annotation.id}`,
             data: {
+              id: annotation.id,
               isSelected: false
             }
           });
@@ -142,13 +146,13 @@ const Viewer = ({ resource }: Props) => {
           'contextmenu',
           function (e: MouseEvent) {
             // check if any target was clicked
-            const target = overlay.fabricCanvas().findTarget(e, false);
+            const target: fabric.Polygon = overlay.fabricCanvas().findTarget(e, false);
             if (target) {
-              setContextMenu(menu => ({
-                ...menu,
+              setContextMenu({
+                target,
                 mouseX: e.clientX,
                 mouseY: e.clientY
-              }));
+              });
             }
             e.preventDefault();
           }
@@ -269,7 +273,10 @@ const Viewer = ({ resource }: Props) => {
   };
 
   const deleteAnnotation = () => {
-    // TODO
+    if (contextMenu) {
+      const canvas = overlay.fabricCanvas();
+      canvas.remove(contextMenu.target);
+    }
     setContextMenu(null);
   };
 
