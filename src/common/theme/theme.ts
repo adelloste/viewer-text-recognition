@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { appBarHeight } from '../constants';
 
 const theme = createTheme({
   palette: {
@@ -7,6 +8,16 @@ const theme = createTheme({
     },
     secondary: {
       main: '#f50057'
+    }
+  },
+  components: {
+    MuiToolbar: {
+      styleOverrides: {
+        dense: {
+          height: appBarHeight,
+          minHeight: appBarHeight
+        }
+      }
     }
   }
 });
