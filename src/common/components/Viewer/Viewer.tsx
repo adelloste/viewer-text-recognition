@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { AddItemWorldEvent } from 'openseadragon';
 import { fabric } from 'fabric';
-import Controls from './Controls';
+import NavigatorOverlay from './NavigatorOverlay';
 import { Annotation, Resource } from '../../../app/definitions/types';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -284,7 +284,7 @@ const Viewer = ({ resource }: Props) => {
   return (
     <Box style={{ position: 'relative', height: '100%', width: '100%' }}>
       <Box id="osd-viewer" style={{ height: '100%', width: '100%', background: '#363636' }}></Box>
-      <Controls />
+      <NavigatorOverlay />
       <Menu
         open={contextMenu !== null}
         onClose={handleClose}

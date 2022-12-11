@@ -7,7 +7,7 @@ import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 
-const Controls = () => {
+const NavigatorOverlay = () => {
   return (
     <Stack
       direction="column"
@@ -46,4 +46,4 @@ const Controls = () => {
   );
 };
 
-export default Controls;
+export default NavigatorOverlay;
