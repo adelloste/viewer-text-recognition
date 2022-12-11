@@ -9,7 +9,7 @@ import { store } from './app/store';
 import theme from './common/theme/theme';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById('root-matrices') as HTMLElement);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
