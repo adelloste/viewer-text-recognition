@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
-import Transcript from '../../features/Transcript/Transcript';
+import Transcription from '../../features/Transcription/Transcription';
 import NotFound from '../../features/NotFound/NotFound';
 
 export const routes: RouteObject[] = [
@@ -14,8 +14,8 @@ export const routes: RouteObject[] = [
         element: <NotFound />
       },
       {
-        path: 'transcript',
-        element: <Transcript />
+        path: 'transcription',
+        element: <Transcription />
       },
       {
         path: '*',
@@ -25,6 +25,6 @@ export const routes: RouteObject[] = [
   },
   {
     path: '*',
-    element: <Navigate to="/main/transcript" replace />
+    element: <Navigate to="/main/transcription" replace />
   }
 ];

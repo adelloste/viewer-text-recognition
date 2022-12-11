@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { AddItemWorldEvent } from 'openseadragon';
 import { fabric } from 'fabric';
 import Controls from './Controls';
-import { Resource } from '../../../app/definitions/types';
+import { Annotation, Resource } from '../../../app/definitions/types';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListItemText from '@mui/material/ListItemText';
@@ -14,7 +14,7 @@ declare const OpenSeadragon: any;
 
 type Props = {
   resource: Resource;
-  save: () => void;
+  setAnnotations: (data: Annotation[]) => void;
 };
 
 const Viewer = ({ resource }: Props) => {
