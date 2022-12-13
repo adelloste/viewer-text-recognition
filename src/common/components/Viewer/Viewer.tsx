@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { AddItemWorldEvent } from 'openseadragon';
+import 'openseadragon-fabricjs-overlay';
+import { fabric } from 'fabric';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { AddItemWorldEvent } from 'openseadragon';
-import { fabric } from 'fabric';
-import NavigatorOverlay from './NavigatorOverlay';
-import { Annotation, Resource } from '../../../app/definitions/types';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListItemText from '@mui/material/ListItemText';
+import NavigatorOverlay from './NavigatorOverlay';
+import { Annotation, Resource } from '../../../app/definitions/types';
 
 declare const OpenSeadragon: any;
 

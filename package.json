@@ -19,6 +19,7 @@
     "fabric": "^5.2.4",
     "http-proxy-middleware": "^2.0.6",
     "openseadragon": "^3.1.0",
+    "openseadragon-fabricjs-overlay": "github:altert/OpenseadragonFabricjsOverlay",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.40.0",
