@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AddItemWorldEvent } from 'openseadragon';
+import OpenSeadragon from 'openseadragon';
 import 'openseadragon-fabricjs-overlay';
 import { fabric } from 'fabric';
 import Box from '@mui/material/Box';
@@ -10,8 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ListItemText from '@mui/material/ListItemText';
 import NavigatorOverlay from './NavigatorOverlay';
 import { Annotation, Resource } from '../../../app/definitions/types';
-
-declare const OpenSeadragon: any;
 
 type Props = {
   resource: Resource;
@@ -46,12 +44,12 @@ const Viewer = ({ resource }: Props) => {
       }
     });
     // raised when an item is added to the World
-    viewer.world.addHandler('add-item', (addItemEvent: AddItemWorldEvent) => {
+    viewer.world.addHandler('add-item', addItemEvent => {
       const tiledImage = addItemEvent.item;
       // raised when the tiledImage is fully loaded
       tiledImage.addHandler('fully-loaded-change', () => {
         // Initialize overlay
-        const overlay = viewer.fabricjsOverlay({
+        const overlay = viewer.fabricjsOverlay<fabric.Canvas>({
           scale: resource.images[0].width // Maybe should we have one image?
         });
         setOverlay(overlay);
@@ -104,7 +102,7 @@ const Viewer = ({ resource }: Props) => {
               //   // viewer.viewport.panTo(bb.getCenter());
               // }
               // // get all objects
-              // const objs: fabric.Object[] = overlay.fabricCanvas().getObjects();
+              // const objs = overlay.fabricCanvas().getObjects();
               // // for every object track event click and update style
               // objs.forEach(o => {
               //   if (o.name === e.target?.name) {
@@ -147,7 +145,7 @@ const Viewer = ({ resource }: Props) => {
           'contextmenu',
           function (e: MouseEvent) {
             // check if any target was clicked
-            const target: fabric.Polygon = overlay.fabricCanvas().findTarget(e, false);
+            const target = overlay.fabricCanvas().findTarget(e, false) as fabric.Polygon;
             if (target) {
               setContextMenu({
                 target,

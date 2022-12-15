@@ -1,0 +1,29 @@
+diff --git a/node_modules/@types/openseadragon/index.d.ts b/node_modules/@types/openseadragon/index.d.ts
+index f4dc2db..9e9b9d3 100644
+--- a/node_modules/@types/openseadragon/index.d.ts
++++ b/node_modules/@types/openseadragon/index.d.ts
+@@ -412,6 +412,7 @@ declare namespace OpenSeadragon {
+         tileOverlap?: number | undefined;
+         minLevel?: number | undefined;
+         maxLevel?: number | undefined;
++        buildPyramid?: boolean;
+         getTileUrl?: ((l: number, x: number, y: number) => string) | undefined;
+     }
+ 
+@@ -1182,6 +1183,16 @@ declare namespace OpenSeadragon {
+         setMouseNavEnabled(enabled: boolean): Viewer;
+         setVisible(visible: boolean): Viewer;
+         updateOverlay(element: Element | string, location: Point | Rect, placement?: Placement): Viewer;
++        fabricjsOverlay<T>(options: { scale: number, static?: boolean }): FabricjsOverlay<T>;
++    }
++
++    interface FabricjsOverlay<T> {
++        canvas(): HTMLCanvasElement;
++        fabricCanvas(): T;
++        clear(): void;
++        render(): void;
++        resize(): void;
++        resizeCanvas(): void;
+     }
+ 
+     class Viewport {

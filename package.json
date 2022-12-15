@@ -35,7 +35,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
-    "format": "prettier \"./**/*.{ts,tsx}\" --write"
+    "format": "prettier \"./**/*.{ts,tsx}\" --write",
+    "postinstall": "patch-package"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +65,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "patch-package": "^6.5.0",
     "prettier": "^2.7.1"
   }
 }
