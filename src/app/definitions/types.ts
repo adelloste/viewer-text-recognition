@@ -27,3 +27,17 @@ export type Annotation = {
 };
 
 export type Category = {};
+
+export type Lib = {
+  countCollections: number;
+  countVolumes: number;
+  countPages: number;
+  countLines: number;
+  collections: Collection[];
+};
+
+export type Collection = {
+  id: string;
+  name: string;
+  children?: Collection[];
+};
