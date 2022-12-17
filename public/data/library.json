@@ -7,6 +7,7 @@
     {
       "id": "9526d92d-72b3-487e-a622-5d09f1fd6814",
       "name": "Collection 1",
+      "date": "25/03/2022",
       "children": [
         {
           "id": "19a942a1-bbde-4f13-bd2e-cf27fa3a06be",
@@ -31,6 +32,7 @@
     {
       "id": "7c15402e-234b-468a-a745-c501a0a4ff79",
       "name": "Collection 2",
+      "date": "26/03/2022",
       "children": [
         {
           "id": "57079cd0-f49b-4f98-8040-be82af56d91a",

@@ -39,5 +39,6 @@ export type Lib = {
 export type Collection = {
   id: string;
   name: string;
+  date: string;
   children?: Collection[];
 };
