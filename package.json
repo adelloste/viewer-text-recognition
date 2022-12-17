@@ -1,6 +1,15 @@
 {
   "name": "viewer-text-recognition",
   "version": "0.1.0",
+  "description": "Matrices",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adelloste/viewer-text-recognition"
+  },
+  "author": "Alessandro Dell'Oste",
+  "bugs": {
+    "url": "https://github.com/adelloste/viewer-text-recognition/issues"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
