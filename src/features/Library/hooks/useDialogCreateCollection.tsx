@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -52,6 +53,10 @@ export const useDialogCreateCollection = ({ onSubmit }: Props) => {
       <DialogTitle color="primary.main">Create new collection</DialogTitle>
       <form onSubmit={handleSubmit(data => onSubmit(data))} autoComplete="off">
         <DialogContent>
+          <DialogContentText>
+            The collection will be initialized without any contents. You can add Pages to this
+            collection after completing its creation.
+          </DialogContentText>
           <Controller
             control={control}
             name="name"
