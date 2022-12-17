@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -96,7 +97,7 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
                 'aria-labelledby': 'collection-button'
               }}
             >
-              <MenuItem onClick={editCollection}>
+              <MenuItem component={Link} to={`/main/collection/${collection.id}`}>
                 <SourceIcon />
                 Edit
               </MenuItem>
