@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -17,6 +18,7 @@ import MainLayout from '../../common/components/MainLayout/MainLayout';
 import CollectionItem from './components/CollectionItem';
 
 const Library = () => {
+  const navigate = useNavigate();
   const { data, isLoading } = useGetLibraryQuery(undefined, {
     refetchOnMountOrArgChange: true
   });
@@ -35,12 +37,11 @@ const Library = () => {
     handleOpen();
   };
 
-  const handleEdit = () => {
-    // TODO
+  const handleEdit = (id: string) => {
+    navigate(`/main/collection/${id}`);
   };
 
   const handleDelete = async (id: string) => {
-    handleClose();
     // TODO: catch error
     await deleteCollection({ id });
   };
