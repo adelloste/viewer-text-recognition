@@ -12,7 +12,7 @@ import {
   useAddCollectionMutation,
   useDeleteCollectionMutation,
   useGetLibraryQuery
-} from '../../app/services/api';
+} from '../../app/services/split/library';
 import { useDialogCreateCollection } from './hooks/useDialogCreateCollection';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import CollectionItem from './components/CollectionItem';

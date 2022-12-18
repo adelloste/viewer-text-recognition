@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { useGetResourceByIdQuery } from '../../app/services/api';
+import {
+  useGetTranscriptionQuery,
+  useUpdateTranscriptionMutation
+} from '../../app/services/split/transcription';
 import { Annotation } from '../../app/definitions/types';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import Viewer from '../../common/components/Viewer/Viewer';
@@ -8,13 +11,15 @@ import Transcriptions from './components/Transcriptions';
 import EditorOverlay from './components/EditorOverlay';
 
 const Transcription = () => {
-  const { data, isLoading } = useGetResourceByIdQuery('6555de96-6572-43a5-afaf-93c8cb04f8cb', {
+  const { data, isLoading } = useGetTranscriptionQuery('6555de96-6572-43a5-afaf-93c8cb04f8cb', {
     refetchOnMountOrArgChange: true
   });
+  const [updateTranscription] = useUpdateTranscriptionMutation();
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
-  const save = () => {
-    // TODO
+  const save = async () => {
+    // TODO: catch error
+    await updateTranscription({ id: '6555de96-6572-43a5-afaf-93c8cb04f8cb', annotations });
   };
 
   const download = () => {
