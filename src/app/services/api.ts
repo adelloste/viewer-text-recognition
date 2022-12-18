@@ -26,7 +26,7 @@ export const api = createApi({
       invalidatesTags: ['Library']
     }),
     getResourceById: builder.query<Resource, string>({
-      query: () => `transcription/resource`
+      query: () => `transcription`
     })
   })
 });
