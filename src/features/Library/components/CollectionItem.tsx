@@ -68,11 +68,6 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
     handleEdit(collection.id);
   };
 
-  const deleteCollection = () => {
-    handleClose();
-    handleDelete(collection.id);
-  };
-
   return (
     <Card>
       <CardHeader
@@ -101,7 +96,7 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
                 <SourceIcon />
                 Edit
               </MenuItem>
-              <MenuItem onClick={deleteCollection}>
+              <MenuItem onClick={() => handleDelete(collection.id)}>
                 <DeleteIcon />
                 Delete
               </MenuItem>

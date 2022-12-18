@@ -7,7 +7,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { useGetLibraryQuery } from '../../app/services/api';
+import {
+  useAddCollectionMutation,
+  useDeleteCollectionMutation,
+  useGetLibraryQuery
+} from '../../app/services/api';
 import { useDialogCreateCollection } from './hooks/useDialogCreateCollection';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import CollectionItem from './components/CollectionItem';
@@ -16,9 +20,14 @@ const Library = () => {
   const { data, isLoading } = useGetLibraryQuery(undefined, {
     refetchOnMountOrArgChange: true
   });
+  const [addCollection] = useAddCollectionMutation();
+  const [deleteCollection] = useDeleteCollectionMutation();
+
   const { dialog, handleClose, handleOpen } = useDialogCreateCollection({
-    onSubmit: data => {
+    onSubmit: async data => {
       handleClose();
+      // TODO: catch error
+      await addCollection(data);
     }
   });
 
@@ -30,8 +39,10 @@ const Library = () => {
     // TODO
   };
 
-  const handleDelete = () => {
-    // TODO
+  const handleDelete = async (id: string) => {
+    handleClose();
+    // TODO: catch error
+    await deleteCollection({ id });
   };
 
   return (
