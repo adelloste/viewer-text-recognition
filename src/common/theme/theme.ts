@@ -18,6 +18,16 @@ const theme = createTheme({
           minHeight: appBarHeight
         }
       }
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          minWidth: 'auto',
+          '& + .MuiListItemText-root': {
+            marginLeft: 15
+          }
+        }
+      }
     }
   }
 });

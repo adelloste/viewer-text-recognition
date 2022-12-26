@@ -4,10 +4,13 @@ import List from '@mui/material/List';
 import ListItemLink from './ListItemLink';
 import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { Collection } from '../../../app/definitions/types';
+import { drawerWidth } from '../../../common/constants';
 
 type Props = {
   collections: Collection[];
@@ -24,7 +27,7 @@ const ListItems = ({ collections }: Props) => {
     <Box
       sx={{
         width: '100%',
-        maxWidth: 240,
+        maxWidth: drawerWidth,
         backgroundColor: 'background.paper'
       }}
     >
@@ -33,6 +36,9 @@ const ListItems = ({ collections }: Props) => {
           item.children.length > 0 ? (
             <React.Fragment key={i}>
               <ListItemButton sx={{ pl: 4 }} onClick={handleClick()}>
+                <ListItemIcon>
+                  <FolderOpenIcon color="primary" fontSize="small" />
+                </ListItemIcon>
                 <ListItemText primary={item.name} />
                 {open ? (
                   <ExpandLessRoundedIcon color="action" />

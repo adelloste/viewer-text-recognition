@@ -12,6 +12,7 @@ import {
   useUploadMutation
 } from '../../app/services/split/library';
 import { useDialogAddPages } from './hooks/useDialogAddPages';
+import { drawerWidth } from '../../common/constants';
 
 const Collection = () => {
   const navigate = useNavigate();
@@ -47,9 +48,9 @@ const Collection = () => {
           <Drawer
             variant="permanent"
             sx={{
-              width: 240,
+              width: drawerWidth,
               flexShrink: 0,
-              [`& .MuiDrawer-paper`]: { width: 240, boxSizing: 'border-box' }
+              [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' }
             }}
           >
             <Toolbar variant="dense" />
