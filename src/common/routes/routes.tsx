@@ -24,7 +24,7 @@ export const routes: RouteObject[] = [
         element: <Collection />
       },
       {
-        path: 'transcription',
+        path: 'transcription/:id',
         element: <Transcription />
       },
       {

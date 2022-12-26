@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <>
-      <AppBar elevation={0} position="fixed">
+      <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters variant="dense">
             <Typography

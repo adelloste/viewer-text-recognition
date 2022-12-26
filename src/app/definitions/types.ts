@@ -29,16 +29,19 @@ export type Annotation = {
 export type Category = {};
 
 export type Lib = {
-  countCollections: number;
-  countVolumes: number;
-  countPages: number;
-  countLines: number;
+  count_collections: number;
+  count_pages: number;
+  count_lines: number;
   collections: Collection[];
 };
 
 export type Collection = {
   id: string;
   name: string;
-  date: string;
-  children?: Collection[];
+  creation_date: string;
+  last_update: string;
+  children: Collection[];
+  description?: string;
+  count_pages?: number;
+  count_lines?: number;
 };

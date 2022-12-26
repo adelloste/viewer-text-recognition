@@ -101,7 +101,7 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
           </>
         }
         title={collection.name}
-        subheader={collection.date}
+        subheader={collection.creation_date}
       />
     </Card>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import {
   useGetTranscriptionQuery,
@@ -11,13 +12,15 @@ import Transcriptions from './components/Transcriptions';
 import EditorOverlay from './components/EditorOverlay';
 
 const Transcription = () => {
-  const { data, isLoading } = useGetTranscriptionQuery('6555de96-6572-43a5-afaf-93c8cb04f8cb', {
+  const { id } = useParams();
+  const { data, isLoading } = useGetTranscriptionQuery(id, {
     refetchOnMountOrArgChange: true
   });
   const [updateTranscription] = useUpdateTranscriptionMutation();
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
   const save = async () => {
+    // TODO: useImperativeHandle: https://stackoverflow.com/a/37950970/3751473
     // TODO: catch error
     await updateTranscription({ id: '6555de96-6572-43a5-afaf-93c8cb04f8cb', annotations });
   };

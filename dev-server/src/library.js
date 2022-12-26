@@ -2,6 +2,8 @@ const express = require('express');
 const routes = express.Router();
 const data = require('./payloads/data-library');
 const uuid = require('uuid');
+const multer = require('multer');
+const upload = multer();
 
 let currentLibrary = {
   ...data.library
@@ -26,7 +28,7 @@ routes.route('/collection').post((req, res) => {
         ...currentLibrary.collections,
         {
           id: uuid.v4(),
-          date: '18/12/2022',
+          creation_date: '18/12/2022',
           ...req.body
         }
       ]
@@ -44,6 +46,27 @@ routes.route('/collection/:id').delete((req, res) => {
       ...currentLibrary,
       collections: [...currentLibrary.collections.filter(c => c.id !== id)]
     };
+    res.setHeader('content-type', 'application/json');
+    res.status(200).send();
+  }, 300);
+});
+
+routes.route('/collection/:id').get((req, res) => {
+  setTimeout(() => {
+    const { id } = req.params;
+    current_collection = [...currentLibrary.collections.filter(c => c.id === id)];
+    res.setHeader('content-type', 'application/json');
+    res.status(200).send(current_collection);
+  }, 300);
+});
+
+routes.route('/collection/:id/upload').post(upload.any(), (req, res) => {
+  setTimeout(() => {
+    const { id } = req.params;
+
+    console.log(id);
+    console.log(req.body);
+
     res.setHeader('content-type', 'application/json');
     res.status(200).send();
   }, 300);
