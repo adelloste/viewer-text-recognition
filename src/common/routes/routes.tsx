@@ -35,6 +35,6 @@ export const routes: RouteObject[] = [
   },
   {
     path: '*',
-    element: <Navigate to="/main/transcription" replace />
+    element: <Navigate to="/main/library" replace />
   }
 ];
