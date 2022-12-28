@@ -1,47 +1,108 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
+import { useDebouncedCallback } from 'use-debounce';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Drawer from '@mui/material/Drawer';
 import {
   useGetTranscriptionQuery,
   useUpdateTranscriptionMutation
 } from '../../app/services/split/transcription';
-import { Annotation } from '../../app/definitions/types';
+import { useAppDispatch, useAppSelector } from '../../common/hooks/useApp';
+import { updateSegmentations, updateAnnotations, deleteAnnotation } from './transcriptionSlice';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import Viewer from '../../common/components/Viewer/Viewer';
 import Transcriptions from './components/Transcriptions';
 import EditorOverlay from './components/EditorOverlay';
+import { Resource, Annotation } from '../../app/definitions/types';
+import { drawerWidth, delay } from '../../common/constants';
 
-const Transcription = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useGetTranscriptionQuery(id, {
-    refetchOnMountOrArgChange: true
-  });
+type Props = {
+  id: string | undefined;
+  data: Resource;
+};
+
+const Page = ({ id, data }: Props) => {
+  const dispatch = useAppDispatch();
+  const annotations = useAppSelector(store => store.transcription.annotations);
+  const deletedAnnotation = useAppSelector(store => store.transcription.deletedAnnotation);
   const [updateTranscription] = useUpdateTranscriptionMutation();
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+
+  const debounceUpdateSegmentations = useDebouncedCallback((id: string, coords: number[]) => {
+    dispatch(updateSegmentations({ id, coords }));
+  }, delay);
+
+  const debounceUpdateAnnotations = useDebouncedCallback((items: Annotation[]) => {
+    dispatch(updateAnnotations(items));
+  }, delay);
 
   const save = async () => {
-    // TODO: useImperativeHandle: https://stackoverflow.com/a/37950970/3751473
     // TODO: catch error
-    await updateTranscription({ id: '6555de96-6572-43a5-afaf-93c8cb04f8cb', annotations });
+    await updateTranscription({ id, annotations });
   };
 
   const download = () => {
     // TODO
   };
 
+  const handleDeleteAnnotation = (id: string) => {
+    dispatch(deleteAnnotation({ id }));
+  };
+
+  const handleUpdateSegmentations = useCallback(
+    (id: string, coords: number[]) => {
+      debounceUpdateSegmentations(id, coords);
+    },
+    [debounceUpdateSegmentations]
+  );
+
+  const handleUpdateAnnotations = useCallback(
+    (items: Annotation[]) => {
+      debounceUpdateAnnotations(items);
+    },
+    [debounceUpdateAnnotations]
+  );
+
+  return (
+    <Box sx={{ display: 'flex', height: '100%' }}>
+      <Box sx={{ flexGrow: 1, position: 'relative' }}>
+        <EditorOverlay save={save} download={download} />
+        <Viewer
+          resource={data}
+          handleDeleteAnnotation={handleDeleteAnnotation}
+          handleUpdateSegmentations={handleUpdateSegmentations}
+        />
+      </Box>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box'
+          }
+        }}
+        variant="permanent"
+        anchor="right"
+      >
+        <Toolbar variant="dense" />
+        <Transcriptions
+          resource={data}
+          deletedAnnotation={deletedAnnotation}
+          handleUpdateAnnotations={handleUpdateAnnotations}
+        />
+      </Drawer>
+    </Box>
+  );
+};
+
+const Transcription = () => {
+  const { id } = useParams();
+  const { currentData, isLoading } = useGetTranscriptionQuery(id);
+
   return (
     <MainLayout isLoading={isLoading}>
-      {data && (
-        <Grid container direction="row" sx={{ flex: 1, overflow: 'auto' }}>
-          <Grid item xs={8} sx={{ position: 'relative' }}>
-            <EditorOverlay save={save} download={download} />
-            <Viewer resource={data} setAnnotations={setAnnotations} />
-          </Grid>
-          <Grid item xs={4} sx={{ maxHeight: '100%', overflow: 'auto' }}>
-            <Transcriptions resource={data} setAnnotations={setAnnotations} />
-          </Grid>
-        </Grid>
-      )}
+      {currentData && <Page id={id} data={currentData} />}
     </MainLayout>
   );
 };

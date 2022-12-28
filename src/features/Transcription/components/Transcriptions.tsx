@@ -9,27 +9,35 @@ import { Annotation, Resource } from '../../../app/definitions/types';
 
 type Props = {
   resource: Resource;
-  setAnnotations: (data: Annotation[]) => void;
+  deletedAnnotation?: Annotation;
+  handleUpdateAnnotations: (data: Annotation[]) => void;
 };
 
-const Transcriptions = ({ resource, setAnnotations }: Props) => {
-  const { control, watch, getValues } = useForm({
+const Transcriptions = ({ resource, deletedAnnotation, handleUpdateAnnotations }: Props) => {
+  const { control, getValues, watch } = useForm({
     defaultValues: {
       annotations: [...resource.annotations]
     }
   });
-  const { fields } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: 'annotations'
   });
 
   useEffect(() => {
     const subscription = watch(() => {
-      const annotations = getValues().annotations;
-      setAnnotations(annotations);
+      const formValues = getValues().annotations;
+      handleUpdateAnnotations(formValues);
     });
     return () => subscription.unsubscribe();
-  }, [watch, getValues, setAnnotations]);
+  }, [watch, getValues, handleUpdateAnnotations]);
+
+  useEffect(() => {
+    if (deletedAnnotation) {
+      const index = getValues().annotations.findIndex(a => a.id === deletedAnnotation.id);
+      remove(index);
+    }
+  }, [deletedAnnotation, getValues, remove]);
 
   return (
     <Box component="form" noValidate autoComplete="off">

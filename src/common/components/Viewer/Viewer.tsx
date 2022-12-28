@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import OpenSeadragon from 'openseadragon';
 import 'openseadragon-fabricjs-overlay';
 import { fabric } from 'fabric';
@@ -9,20 +9,148 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListItemText from '@mui/material/ListItemText';
 import NavigatorOverlay from './NavigatorOverlay';
-import { Annotation, Resource } from '../../../app/definitions/types';
+import { flattenSegmentation, segmentation } from '../../utils/segmentation';
+import { Resource } from '../../../app/definitions/types';
 
 type Props = {
   resource: Resource;
-  setAnnotations: (data: Annotation[]) => void;
+  handleDeleteAnnotation: (id: string) => void;
+  handleUpdateSegmentations: (id: string, data: number[]) => void;
 };
 
-const Viewer = ({ resource }: Props) => {
+const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }: Props) => {
+  const [overlay, setOverlay] = useState<any | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     target: fabric.Polygon;
     mouseX: number;
     mouseY: number;
   } | null>(null);
-  const [overlay, setOverlay] = useState<any | null>(null);
+
+  // define a function that can locate the controls.
+  // this function will be used both for drawing and for interaction.
+  const polygonPositionHandler = (pointIndex: number) => {
+    return function (dim: fabric.Point, finalMatrix: any, fabricObject: any /* fabric.Polygon */) {
+      const x = fabricObject.points[pointIndex].x - fabricObject.pathOffset.x;
+      const y = fabricObject.points[pointIndex].y - fabricObject.pathOffset.y;
+
+      return fabric.util.transformPoint(
+        new fabric.Point(x, y),
+        fabric.util.multiplyTransformMatrices(
+          fabricObject.getViewportTransform(),
+          fabricObject.calcTransformMatrix()
+        )
+      );
+    };
+  };
+
+  const getObjectSizeWithStroke = (object: any /* fabric.Polygon */) => {
+    const stroke = new fabric.Point(
+      object.strokeUniform ? 1 / object.scaleX : 1,
+      object.strokeUniform ? 1 / object.scaleY : 1
+    ).multiply(object.strokeWidth);
+    return new fabric.Point(object.width + stroke.x, object.height + stroke.y);
+  };
+
+  // define a function that will define what the control does
+  // this function will be called on every mouse move after a control has been
+  // clicked and is being dragged.
+  // The function receive as argument the mouse event, the current trasnform object
+  // and the current position in canvas coordinate
+  // transform.target is a reference to the current object being transformed,
+  const actionHandler = useCallback(
+    (
+      eventData: MouseEvent,
+      transform: fabric.Transform,
+      x: number,
+      y: number,
+      pointIndex: number
+    ) => {
+      const polygon: any = transform.target; // as fabric.Polygon;
+      const mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center');
+      const polygonBaseSize = getObjectSizeWithStroke(polygon);
+      const size = polygon._getTransformedDimensions(0, 0);
+      const finalPointPosition = new fabric.Point(
+        (mouseLocalPosition.x * polygonBaseSize.x) / size.x + polygon.pathOffset.x,
+        (mouseLocalPosition.y * polygonBaseSize.y) / size.y + polygon.pathOffset.y
+      );
+      polygon.points[pointIndex] = finalPointPosition;
+      return true;
+    },
+    []
+  );
+
+  // define a function that can keep the polygon in the same position when we change its
+  // width/height/top/left.
+  const anchorWrapper = useCallback(
+    (anchorIndex: number, fn: typeof actionHandler, pointIndex: number) => {
+      return function (eventData: MouseEvent, transform: fabric.Transform, x: number, y: number) {
+        const fabricObject: any = transform.target;
+        const absolutePoint = fabric.util.transformPoint(
+          new fabric.Point(
+            fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x,
+            fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y
+          ),
+          fabricObject.calcTransformMatrix()
+        );
+        const actionPerformed = fn(eventData, transform, x, y, pointIndex);
+        const newDim = fabricObject._setPositionDimensions({});
+        const polygonBaseSize = getObjectSizeWithStroke(fabricObject);
+        const newX =
+          (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) / polygonBaseSize.x;
+        const newY =
+          (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y) / polygonBaseSize.y;
+        fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        //
+        handleUpdateSegmentations(
+          fabricObject.data.id,
+          flattenSegmentation(fabricObject.get('points'))
+        );
+        return actionPerformed;
+      };
+    },
+    [handleUpdateSegmentations]
+  );
+
+  // Fabric.js demos · Custom controls, polygon
+  // http://fabricjs.com/custom-controls-polygon
+  const enableEditMode = useCallback(
+    (poly: fabric.Polygon) => {
+      if (poly.points) {
+        // get last point
+        const lastControl = poly.points.length - 1;
+        // update controls
+        poly.controls = poly.points.reduce(
+          (acc: Record<string, fabric.Control>, point: fabric.Point, index: number) => {
+            acc['p' + index] = new fabric.Control({
+              positionHandler: polygonPositionHandler(index),
+              actionHandler: anchorWrapper(
+                index > 0 ? index - 1 : lastControl,
+                actionHandler,
+                index
+              )
+            });
+            return acc;
+          },
+          {}
+        );
+      }
+    },
+    [actionHandler, anchorWrapper]
+  );
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+
+  const deleteAnnotation = () => {
+    if (contextMenu) {
+      const canvas = overlay.fabricCanvas();
+      canvas.remove(contextMenu.target);
+      // delete annotation by id
+      handleDeleteAnnotation(contextMenu.target.data.id);
+    }
+    setContextMenu(null);
+  };
 
   useEffect(() => {
     const viewer = OpenSeadragon({
@@ -162,123 +290,7 @@ const Viewer = ({ resource }: Props) => {
     return () => {
       viewer.destroy();
     };
-  }, [resource]);
-
-  const segmentation = (values: number[]) => {
-    return values.reduce((result: { x: number; y: number }[], value, index, array) => {
-      if (index % 2 === 0) {
-        const sl = array.slice(index, index + 2);
-        result.push({ x: sl[0], y: sl[1] });
-      }
-      return result;
-    }, []);
-  };
-
-  // Fabric.js demos · Custom controls, polygon
-  // http://fabricjs.com/custom-controls-polygon
-  const enableEditMode = (poly: fabric.Polygon) => {
-    if (poly.points) {
-      // get last point
-      const lastControl = poly.points.length - 1;
-      // update controls
-      poly.controls = poly.points.reduce(
-        (acc: Record<string, fabric.Control>, point: fabric.Point, index: number) => {
-          acc['p' + index] = new fabric.Control({
-            positionHandler: polygonPositionHandler(index),
-            actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler, index)
-          });
-          return acc;
-        },
-        {}
-      );
-    }
-  };
-
-  // define a function that can locate the controls.
-  // this function will be used both for drawing and for interaction.
-  const polygonPositionHandler = (pointIndex: number) => {
-    return function (dim: fabric.Point, finalMatrix: any, fabricObject: any /* fabric.Polygon */) {
-      const x = fabricObject.points[pointIndex].x - fabricObject.pathOffset.x;
-      const y = fabricObject.points[pointIndex].y - fabricObject.pathOffset.y;
-
-      return fabric.util.transformPoint(
-        new fabric.Point(x, y),
-        fabric.util.multiplyTransformMatrices(
-          fabricObject.getViewportTransform(),
-          fabricObject.calcTransformMatrix()
-        )
-      );
-    };
-  };
-
-  const getObjectSizeWithStroke = (object: any /* fabric.Polygon */) => {
-    const stroke = new fabric.Point(
-      object.strokeUniform ? 1 / object.scaleX : 1,
-      object.strokeUniform ? 1 / object.scaleY : 1
-    ).multiply(object.strokeWidth);
-    return new fabric.Point(object.width + stroke.x, object.height + stroke.y);
-  };
-
-  // define a function that will define what the control does
-  // this function will be called on every mouse move after a control has been
-  // clicked and is being dragged.
-  // The function receive as argument the mouse event, the current trasnform object
-  // and the current position in canvas coordinate
-  // transform.target is a reference to the current object being transformed,
-  const actionHandler = (
-    eventData: MouseEvent,
-    transform: fabric.Transform,
-    x: number,
-    y: number,
-    pointIndex: number
-  ) => {
-    const polygon: any = transform.target; // as fabric.Polygon;
-    const mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center');
-    const polygonBaseSize = getObjectSizeWithStroke(polygon);
-    const size = polygon._getTransformedDimensions(0, 0);
-    const finalPointPosition = new fabric.Point(
-      (mouseLocalPosition.x * polygonBaseSize.x) / size.x + polygon.pathOffset.x,
-      (mouseLocalPosition.y * polygonBaseSize.y) / size.y + polygon.pathOffset.y
-    );
-    polygon.points[pointIndex] = finalPointPosition;
-    return true;
-  };
-
-  // define a function that can keep the polygon in the same position when we change its
-  // width/height/top/left.
-  const anchorWrapper = (anchorIndex: number, fn: typeof actionHandler, pointIndex: number) => {
-    return function (eventData: MouseEvent, transform: fabric.Transform, x: number, y: number) {
-      const fabricObject: any = transform.target;
-      const absolutePoint = fabric.util.transformPoint(
-        new fabric.Point(
-          fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x,
-          fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y
-        ),
-        fabricObject.calcTransformMatrix()
-      );
-      const actionPerformed = fn(eventData, transform, x, y, pointIndex);
-      const newDim = fabricObject._setPositionDimensions({});
-      const polygonBaseSize = getObjectSizeWithStroke(fabricObject);
-      const newX =
-        (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) / polygonBaseSize.x;
-      const newY =
-        (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y) / polygonBaseSize.y;
-      fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
-      return actionPerformed;
-    };
-  };
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
-
-  const deleteAnnotation = () => {
-    if (contextMenu) {
-      const canvas = overlay.fabricCanvas();
-      canvas.remove(contextMenu.target);
-    }
-    setContextMenu(null);
-  };
+  }, [resource.images, resource.annotations, enableEditMode]);
 
   return (
     <Box style={{ position: 'relative', height: '100%', width: '100%' }}>
