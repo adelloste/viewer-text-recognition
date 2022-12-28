@@ -41,9 +41,13 @@ const Library = () => {
     navigate(`/main/collection/${id}`);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     // TODO: catch error
-    await deleteCollection({ id });
+    void deleteCollection({ id });
+  };
+
+  const handleDownload = (id: string) => {
+    //
   };
 
   return (
@@ -77,6 +81,7 @@ const Library = () => {
                   collection={collection}
                   handleEdit={handleEdit}
                   handleDelete={handleDelete}
+                  handleDownload={handleDownload}
                 />
               </Grid>
             ))}

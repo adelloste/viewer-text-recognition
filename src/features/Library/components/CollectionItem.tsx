@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SourceIcon from '@mui/icons-material/Source';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Collection } from '../../../app/definitions/types';
 
@@ -41,9 +42,10 @@ type Props = {
   collection: Collection;
   handleEdit: (id: string) => void;
   handleDelete: (id: string) => void;
+  handleDownload: (id: string) => void;
 };
 
-const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
+const CollectionItem = ({ collection, handleEdit, handleDelete, handleDownload }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -63,6 +65,11 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
   const deleteCollection = () => {
     handleClose();
     handleDelete(collection.id);
+  };
+
+  const downloadCollection = () => {
+    handleClose();
+    handleDownload(collection.id);
   };
 
   return (
@@ -92,6 +99,10 @@ const CollectionItem = ({ collection, handleEdit, handleDelete }: Props) => {
               <MenuItem onClick={editCollection}>
                 <SourceIcon />
                 Edit
+              </MenuItem>
+              <MenuItem onClick={downloadCollection}>
+                <DownloadIcon />
+                Download
               </MenuItem>
               <MenuItem onClick={deleteCollection}>
                 <DeleteIcon />
