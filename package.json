@@ -48,7 +48,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
+    "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx",
     "format": "prettier \"./**/*.{ts,tsx}\" --write",
     "postinstall": "patch-package"
   },
