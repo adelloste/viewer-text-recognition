@@ -74,16 +74,13 @@ const Page = ({ id, data }: Props) => {
         />
       </Box>
       <Drawer
+        variant="permanent"
+        anchor="right"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box'
-          }
+          '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' }
         }}
-        variant="permanent"
-        anchor="right"
       >
         <Toolbar variant="dense" />
         <Transcriptions
