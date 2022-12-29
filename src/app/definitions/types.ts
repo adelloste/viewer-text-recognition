@@ -13,6 +13,7 @@ export type Image = {
   id: number;
   width: number;
   height: number;
+  file_path: string;
   file_name: string;
 };
 

@@ -9,6 +9,7 @@ app.options('*', cors());
 app.use(cors({ exposedHeaders: ['Content-Disposition', 'content-disposition'] }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/static', express.static('public'));
 
 app.use((req, res, next) => {
   try {

@@ -7,7 +7,8 @@ const transcription = {
       id: 1,
       width: 2828,
       height: 6127,
-      file_name: 'SS CeD Cartella 14 053r.png'
+      file_path: 'http://localhost:8080/static/document-01.jpg',
+      file_name: 'document-01.jpg'
     }
   ],
   annotations: [

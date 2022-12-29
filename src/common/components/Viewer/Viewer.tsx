@@ -162,7 +162,7 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
       fullPageButton: 'osd-fulls',
       tileSources: {
         type: 'image',
-        url: '/images/document-01.jpg',
+        url: resource.images[0].file_path,
         buildPyramid: false,
         width: resource.images[0].width,
         height: resource.images[0].height
