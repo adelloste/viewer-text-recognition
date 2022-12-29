@@ -26,10 +26,9 @@ const Library = () => {
   const [deleteCollection] = useDeleteCollectionMutation();
 
   const { dialog, handleClose, handleOpen } = useDialogCreateCollection({
-    onSubmit: async data => {
+    onSubmit: data => {
       handleClose();
-      // TODO: catch error
-      await addCollection(data);
+      void addCollection(data);
     }
   });
 
@@ -42,7 +41,6 @@ const Library = () => {
   };
 
   const handleDelete = (id: string) => {
-    // TODO: catch error
     void deleteCollection({ id });
   };
 

@@ -16,6 +16,7 @@ import Transcriptions from './components/Transcriptions';
 import EditorOverlay from './components/EditorOverlay';
 import { Resource, Annotation } from '../../app/definitions/types';
 import { drawerWidth, delay } from '../../common/constants';
+import { enqueueSnackbar } from '../../appSlice';
 
 type Props = {
   id: string | undefined;
@@ -37,8 +38,17 @@ const Page = ({ id, data }: Props) => {
   }, delay);
 
   const save = async () => {
-    // TODO: catch error
-    await updateTranscription({ id, annotations });
+    void updateTranscription({ id, annotations })
+      .unwrap()
+      .then(() =>
+        dispatch(
+          enqueueSnackbar({
+            title: 'Success',
+            message: 'Saving page was successful',
+            options: { severity: 'success' }
+          })
+        )
+      );
   };
 
   const download = () => {

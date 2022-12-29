@@ -5,6 +5,7 @@ import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { SnackbarProvider } from 'notistack';
 import App from './App';
 import { store } from './app/store';
 import theme from './common/theme/theme';
@@ -16,9 +17,11 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <HashRouter>
-          <App />
-        </HashRouter>
+        <SnackbarProvider maxSnack={3}>
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </SnackbarProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

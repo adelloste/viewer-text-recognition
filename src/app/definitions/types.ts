@@ -1,3 +1,13 @@
+import { AlertProps } from '@mui/material/Alert';
+
+export type Notification = {
+  key: string;
+  title: string;
+  message: string;
+  dismissed: boolean;
+  options: Pick<AlertProps, 'severity'>;
+};
+
 export type Resource = {
   info: Info;
   images: Image[];
