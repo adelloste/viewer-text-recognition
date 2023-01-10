@@ -1,4 +1,4 @@
-import { Collection, Lib } from '../../definitions/types';
+import { Collection, Lib } from '../../../definitions/types';
 import { api } from '../api';
 
 export const libraryApi = api

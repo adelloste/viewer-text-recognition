@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ListItemText from '@mui/material/ListItemText';
 import NavigatorOverlay from './NavigatorOverlay';
 import { flattenSegmentation, segmentation } from '../../utils/segmentation';
-import { Resource } from '../../../app/definitions/types';
+import { Resource } from '../../../definitions/types';
 
 type Props = {
   resource: Resource;

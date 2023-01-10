@@ -5,7 +5,7 @@ import ListItem from '@mui/material/ListItem';
 import ListSubheader from '@mui/material/ListSubheader';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Annotation, Resource } from '../../../app/definitions/types';
+import { Annotation, Resource } from '../../../definitions/types';
 
 type Props = {
   resource: Resource;

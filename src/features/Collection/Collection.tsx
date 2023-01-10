@@ -10,7 +10,7 @@ import {
   useDeleteCollectionMutation,
   useGetCollectionQuery,
   useUploadMutation
-} from '../../app/services/split/library';
+} from '../api/split/library';
 import { useDialogAddPages } from './hooks/useDialogAddPages';
 import { drawerWidth } from '../../common/constants';
 

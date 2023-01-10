@@ -7,14 +7,14 @@ import Drawer from '@mui/material/Drawer';
 import {
   useGetTranscriptionQuery,
   useUpdateTranscriptionMutation
-} from '../../app/services/split/transcription';
+} from '../api/split/transcription';
 import { useAppDispatch, useAppSelector } from '../../common/hooks/useApp';
 import { updateSegmentations, updateAnnotations, deleteAnnotation } from './transcriptionSlice';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import Viewer from '../../common/components/Viewer/Viewer';
 import Transcriptions from './components/Transcriptions';
 import EditorOverlay from './components/EditorOverlay';
-import { Resource, Annotation } from '../../app/definitions/types';
+import { Resource, Annotation } from '../../definitions/types';
 import { drawerWidth, delay } from '../../common/constants';
 import { enqueueSnackbar } from '../../appSlice';
 

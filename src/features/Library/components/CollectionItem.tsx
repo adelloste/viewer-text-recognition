@@ -10,7 +10,7 @@ import SourceIcon from '@mui/icons-material/Source';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Collection } from '../../../app/definitions/types';
+import { Collection } from '../../../definitions/types';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu

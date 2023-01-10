@@ -1,5 +1,5 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
-import { Notification } from './app/definitions/types';
+import { Notification } from './definitions/types';
 
 interface AppState {
   notifications: Notification[];

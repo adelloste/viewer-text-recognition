@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Collection } from '../../../app/definitions/types';
+import { Collection } from '../../../definitions/types';
 import { drawerWidth } from '../../../common/constants';
 
 type Props = {

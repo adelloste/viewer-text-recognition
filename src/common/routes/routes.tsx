@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
-import Library from '../../features/Library/Library';
-import Collection from '../../features/Collection/Collection';
-import Transcription from '../../features/Transcription/Transcription';
-import NotFound from '../../features/NotFound/NotFound';
+import Library from '../../features/library/Library';
+import Collection from '../../features/collection/Collection';
+import Transcription from '../../features/transcription/Transcription';
+import NotFound from '../../features/not-found/NotFound';
 
 export const routes: RouteObject[] = [
   {

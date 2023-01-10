@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { transcriptionApi } from '../../app/services/split/transcription';
-import { Annotation } from '../../app/definitions/types';
+import { transcriptionApi } from '../api/split/transcription';
+import { Annotation } from '../../definitions/types';
 
 interface TranscriptionState {
   annotations: Annotation[];

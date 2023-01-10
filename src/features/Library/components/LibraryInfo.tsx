@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Lib } from '../../../app/definitions/types';
+import { Lib } from '../../../definitions/types';
 
 const LibraryInfo = ({ count_collections, count_pages, count_lines }: Lib) => (
   <Box color="text.secondary">

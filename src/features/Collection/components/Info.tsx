@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PhotoIcon from '@mui/icons-material/Photo';
-import { Collection } from '../../../app/definitions/types';
+import { Collection } from '../../../definitions/types';
 
 type Props = {
   collection: Collection;

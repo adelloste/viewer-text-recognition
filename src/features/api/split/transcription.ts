@@ -1,4 +1,4 @@
-import { Annotation, Resource } from '../../definitions/types';
+import { Annotation, Resource } from '../../../definitions/types';
 import { api } from '../api';
 
 export const transcriptionApi = api.injectEndpoints({
