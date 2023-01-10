@@ -1,5 +1,6 @@
 import { Collection, Lib } from '../../../definitions/types';
 import { api } from '../api';
+import { saveAs } from 'file-saver';
 
 export const libraryApi = api
   .enhanceEndpoints({
@@ -37,6 +38,21 @@ export const libraryApi = api
           body: data
         }),
         invalidatesTags: ['Collection']
+      }),
+      download: builder.mutation<null, { id: string | undefined }>({
+        queryFn: async ({ id }, _api, _extraOptions, baseQuery) => {
+          // TODO: manage error
+          const result = await baseQuery({
+            url: `library/collection/${id}/download`,
+            responseHandler: response => response.blob()
+          });
+          // save file
+          saveAs(result.data as Blob);
+
+          return {
+            data: null
+          };
+        }
       })
     })
   });
@@ -46,5 +62,6 @@ export const {
   useGetCollectionQuery,
   useAddCollectionMutation,
   useDeleteCollectionMutation,
-  useUploadMutation
+  useUploadMutation,
+  useDownloadMutation
 } = libraryApi;

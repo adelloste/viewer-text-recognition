@@ -11,6 +11,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import {
   useAddCollectionMutation,
   useDeleteCollectionMutation,
+  useDownloadMutation,
   useGetLibraryQuery
 } from '../api/split/library';
 import { useDialogCreateCollection } from './hooks/useDialogCreateCollection';
@@ -24,6 +25,7 @@ const Library = () => {
   });
   const [addCollection] = useAddCollectionMutation();
   const [deleteCollection] = useDeleteCollectionMutation();
+  const [downloadCollection] = useDownloadMutation();
 
   const { dialog, handleClose, handleOpen } = useDialogCreateCollection({
     onSubmit: data => {
@@ -45,7 +47,7 @@ const Library = () => {
   };
 
   const handleDownload = (id: string) => {
-    //
+    void downloadCollection({ id });
   };
 
   return (
