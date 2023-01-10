@@ -1,9 +1,13 @@
 const express = require('express');
 const routes = express.Router();
 const data = require('./payloads/data-library');
+const path = require('path');
 const uuid = require('uuid');
 const multer = require('multer');
 const upload = multer();
+
+const root = path.resolve('.');
+const assetsFolder = root + '/assets';
 
 let currentLibrary = {
   ...data.library
@@ -70,6 +74,12 @@ routes.route('/collection/:id/upload').post(upload.any(), (req, res) => {
     res.setHeader('content-type', 'application/json');
     res.status(200).send();
   }, 300);
+});
+
+routes.route('/collection/:id/download').get((req, res) => {
+  const args = req.params.args;
+  const file = `${assetsFolder}/dummy.pdf`;
+  res.download(file);
 });
 
 module.exports = handler;
