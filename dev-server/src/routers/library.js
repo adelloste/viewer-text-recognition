@@ -9,13 +9,13 @@ export const libraryRouter = Router();
 let currentLibrary = { ...library };
 
 // get current library
-libraryRouter.get('/', function (req, res) {
+libraryRouter.get('/', (req, res) => {
   res.setHeader('content-type', 'application/json');
   res.status(200).send(currentLibrary);
 });
 
 // create collection
-libraryRouter.post('/collection', function (req, res) {
+libraryRouter.post('/collection', (req, res) => {
   currentLibrary = {
     ...currentLibrary,
     collections: [
@@ -32,7 +32,7 @@ libraryRouter.post('/collection', function (req, res) {
 });
 
 // delete collection by id
-libraryRouter.delete('/collection/:id', function (req, res) {
+libraryRouter.delete('/collection/:id', (req, res) => {
   const { id } = req.params;
   currentLibrary = {
     ...currentLibrary,
@@ -43,7 +43,7 @@ libraryRouter.delete('/collection/:id', function (req, res) {
 });
 
 // get collection by id
-libraryRouter.get('/collection/:id', function (req, res) {
+libraryRouter.get('/collection/:id', (req, res) => {
   const { id } = req.params;
   const currentCollection = currentLibrary.collections.filter(c => c.id === id);
   res.setHeader('content-type', 'application/json');
@@ -53,14 +53,14 @@ libraryRouter.get('/collection/:id', function (req, res) {
 // upload file
 const upload = multer();
 
-libraryRouter.post('/collection/:id/upload', upload.any(), function (req, res) {
+libraryRouter.post('/collection/:id/upload', upload.any(), (req, res) => {
   const { id } = req.params;
   res.setHeader('content-type', 'application/json');
   res.status(200).send();
 });
 
 // donwload file
-libraryRouter.get('/collection/:id/download', function (req, res) {
+libraryRouter.get('/collection/:id/download', (req, res) => {
   const file = `${assets}/dummy.pdf`;
   res.download(file);
 });
