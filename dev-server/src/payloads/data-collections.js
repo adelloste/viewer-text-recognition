@@ -1,4 +1,4 @@
-const collection = [
+export const collections = [
   {
     id: '510597c0-7059-472f-a7e6-ead786b33eaf',
     name: 'Collection 1',
@@ -42,7 +42,3 @@ const collection = [
     ]
   }
 ];
-
-module.exports = {
-  collection
-};

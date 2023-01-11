@@ -1,4 +1,4 @@
-const transcription = {
+export const transcription = {
   info: {
     description: 'my-project-name'
   },
@@ -467,8 +467,4 @@ const transcription = {
     }
   ],
   categories: []
-};
-
-module.exports = {
-  transcription
 };

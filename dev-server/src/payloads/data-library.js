@@ -1,12 +1,8 @@
-const data = require('./data-collections');
+import { collections } from './data-collections';
 
-const library = {
-  count_collections: 2,
+export const library = {
+  count_collections: 1,
   count_pages: 247,
   count_lines: 3422,
-  collections: [...data.collection]
-};
-
-module.exports = {
-  library
+  collections: [...collections]
 };
