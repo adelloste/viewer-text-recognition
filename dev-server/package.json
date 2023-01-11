@@ -1,7 +1,7 @@
 {
-  "name": "dev-server",
+  "name": "matrices-dev-server",
   "version": "0.0.1",
-  "description": "A mock server",
+  "description": "Simple mock server for matrices",
   "main": "index.js",
   "type": "module",
   "scripts": {
