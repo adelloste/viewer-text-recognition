@@ -16,10 +16,11 @@ app.use('/static', express.static('public'));
 // set middlewares
 app.use(morgan('dev'));
 app.use(delayer(config.delay));
-app.use(errorHandler);
 // routers
 app.use('/api/v1/library', libraryRouter);
 app.use('/api/v1/transcription', transcriptionRouter);
+// set error handler
+app.use(errorHandler);
 
 app.listen(config.port, () => {
   console.log('server running on port 8080');
