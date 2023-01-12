@@ -7,7 +7,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -21,6 +20,7 @@ import * as yup from 'yup';
 const baseStyle = {
   flex: 1,
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
   padding: '20px',
   borderWidth: 2,
@@ -32,23 +32,21 @@ const baseStyle = {
   outline: 'none',
   mt: '16px',
   mb: '8px'
-};
+} as const;
 
 const focusedStyle = {
   borderColor: 'primary.main'
-};
+} as const;
 
 const acceptStyle = {
   borderColor: 'success.main'
-};
+} as const;
 
 const rejectStyle = {
   borderColor: 'error.main'
-};
+} as const;
 
 const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  description: yup.string().required('Description is required'),
   files: yup.mixed().required('File is required')
 });
 
@@ -71,10 +69,6 @@ export const useDialogAddPages = ({ onSubmit }: Props) => {
     setValue,
     formState: { errors }
   } = useForm<FormValues>({
-    defaultValues: {
-      name: '',
-      description: ''
-    },
     resolver: yupResolver(schema)
   });
 
@@ -97,42 +91,14 @@ export const useDialogAddPages = ({ onSubmit }: Props) => {
           </DialogContentText>
           <Controller
             control={control}
-            name="name"
-            render={({ field }) => (
-              <TextField
-                {...field}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-                fullWidth
-                id="input-collection-name"
-                margin="normal"
-                label="Name"
-                variant="outlined"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="description"
-            render={({ field }) => (
-              <TextField
-                {...field}
-                error={!!errors.description}
-                helperText={errors.description?.message}
-                fullWidth
-                id="input-collection-description"
-                margin="normal"
-                label="Description"
-                variant="outlined"
-              />
-            )}
-          />
-          <Controller
-            control={control}
             name="files"
             render={({ field: { onChange, onBlur } }) => (
               <Dropzone
                 multiple
+                accept={{
+                  'image/jpeg': [],
+                  'image/png': []
+                }}
                 onDrop={acceptedFiles => {
                   setValue('files', acceptedFiles as unknown as FileList);
                 }}
@@ -165,6 +131,7 @@ export const useDialogAddPages = ({ onSubmit }: Props) => {
                       <Box component="p">
                         Drag and drop some files here, or click to select files
                       </Box>
+                      <Box component="em">(Only *.jpeg and *.png images will be accepted)</Box>
                     </Box>
                     <List dense>
                       {acceptedFiles.map((file, i) => (
