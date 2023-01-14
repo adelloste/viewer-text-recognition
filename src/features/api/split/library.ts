@@ -12,7 +12,7 @@ export const libraryApi = api
         query: () => `library`,
         providesTags: ['Library']
       }),
-      addCollection: builder.mutation<void, { name: string; description: string }>({
+      addCollection: builder.mutation<Collection, Pick<Collection, 'name' | 'description'>>({
         query: data => ({
           url: 'library/collection',
           method: 'POST',

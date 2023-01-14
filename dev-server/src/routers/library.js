@@ -16,19 +16,21 @@ libraryRouter.get('/', (req, res) => {
 
 // create collection
 libraryRouter.post('/collection', (req, res) => {
+  const collection = {
+    id: uuidv4(),
+    creation_date: '18/12/2022',
+    last_update: '18/12/2022',
+    count_pages: 0,
+    count_lines: 0,
+    children: [],
+    ...req.body
+  };
   currentLibrary = {
     ...currentLibrary,
-    collections: [
-      ...currentLibrary.collections,
-      {
-        id: uuidv4(),
-        creation_date: '18/12/2022',
-        ...req.body
-      }
-    ]
+    collections: [...currentLibrary.collections, collection]
   };
   res.setHeader('content-type', 'application/json');
-  res.status(200).send();
+  res.status(200).send(collection);
 });
 
 // delete collection by id
