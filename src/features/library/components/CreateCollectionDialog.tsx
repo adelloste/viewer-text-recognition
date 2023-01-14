@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import Menu, { MenuProps } from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import SourceIcon from '@mui/icons-material/Source';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Collection } from '../../../definitions/types';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -20,16 +32,14 @@ type FormValues = {
   description: string;
 };
 
-type Props = {
-  onSubmit: (values: FormValues) => void;
-};
+interface Props extends DialogProps {
+  handleClose: (values: FormValues) => void;
+}
 
-export const useDialogCreateCollection = ({ onSubmit }: Props) => {
-  const [open, setOpen] = useState(false);
+const CreateCollectionDialog = ({ handleClose, ...props }: Props) => {
   const {
     handleSubmit,
     control,
-    reset,
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
@@ -39,19 +49,10 @@ export const useDialogCreateCollection = ({ onSubmit }: Props) => {
     resolver: yupResolver(schema)
   });
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    reset();
-  };
-
-  const dialog = (
-    <Dialog fullWidth={true} scroll="body" open={open} onClose={handleClose}>
+  return (
+    <Dialog {...props} fullWidth={true} scroll="body">
       <DialogTitle color="primary.main">Create new collection</DialogTitle>
-      <form onSubmit={handleSubmit(data => onSubmit(data))} autoComplete="off">
+      <form onSubmit={handleSubmit(data => handleClose(data))} autoComplete="off">
         <DialogContent>
           <DialogContentText>
             The collection will be initialized without any contents. You can add Pages to this
@@ -96,10 +97,6 @@ export const useDialogCreateCollection = ({ onSubmit }: Props) => {
       </form>
     </Dialog>
   );
-
-  return {
-    dialog,
-    handleOpen,
-    handleClose
-  };
 };
+
+export default CreateCollectionDialog;

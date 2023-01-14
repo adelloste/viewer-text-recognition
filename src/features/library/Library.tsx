@@ -14,9 +14,11 @@ import {
   useDownloadMutation,
   useGetLibraryQuery
 } from '../api/split/library';
-import { useDialogCreateCollection } from './hooks/useDialogCreateCollection';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import CollectionItem from './components/CollectionItem';
+import ConfirmDialog from '../../common/components/ConfirmDialog/ConfirmDialog';
+import CreateCollectionDialog from './components/CreateCollectionDialog';
+import { useModal } from '../dialog/hooks/useModal';
 
 const Library = () => {
   const navigate = useNavigate();
@@ -26,16 +28,18 @@ const Library = () => {
   const [addCollection] = useAddCollectionMutation();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [downloadCollection] = useDownloadMutation();
-
-  const { dialog, handleClose, handleOpen } = useDialogCreateCollection({
-    onSubmit: data => {
-      handleClose();
-      void addCollection(data);
-    }
-  });
+  const { showModal } = useModal();
 
   const handleCreateCollection = () => {
-    handleOpen();
+    const { hide } = showModal(CreateCollectionDialog, {
+      handleClose: data => {
+        hide();
+
+        if (data) {
+          void addCollection(data);
+        }
+      }
+    });
   };
 
   const handleEdit = (id: string) => {
@@ -43,7 +47,17 @@ const Library = () => {
   };
 
   const handleDelete = (id: string) => {
-    void deleteCollection({ id });
+    const { hide } = showModal(ConfirmDialog, {
+      title: 'Delete collection',
+      description: 'Do you really want to delete this collection? The process cannot be undone.',
+      handleClose: status => {
+        hide();
+
+        if (status) {
+          void deleteCollection({ id });
+        }
+      }
+    });
   };
 
   const handleDownload = (id: string) => {
@@ -87,7 +101,6 @@ const Library = () => {
             ))}
           </Grid>
         </Box>
-        {dialog}
       </Container>
     </MainLayout>
   );
