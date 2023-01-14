@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Dropzone from 'react-dropzone';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -56,35 +56,24 @@ type FormValues = {
   files: FileList;
 };
 
-type Props = {
-  onSubmit: (values: FormValues) => void;
-};
+interface Props extends DialogProps {
+  handleClose: (values: FormValues) => void;
+}
 
-export const useDialogAddPages = ({ onSubmit }: Props) => {
-  const [open, setOpen] = useState(false);
+const AddPagesDialog = ({ handleClose, ...props }: Props) => {
   const {
     handleSubmit,
     control,
-    reset,
     setValue,
     formState: { errors }
   } = useForm<FormValues>({
     resolver: yupResolver(schema)
   });
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    reset();
-  };
-
-  const dialog = (
-    <Dialog fullWidth={true} scroll="body" open={open} onClose={handleClose}>
+  return (
+    <Dialog {...props} fullWidth={true} scroll="body">
       <DialogTitle color="primary.main">Add pages to Collection</DialogTitle>
-      <form onSubmit={handleSubmit(data => onSubmit(data))} autoComplete="off">
+      <form onSubmit={handleSubmit(data => handleClose(data))} autoComplete="off">
         <DialogContent>
           <DialogContentText>
             You can always add more pages to this Collection later.
@@ -157,10 +146,6 @@ export const useDialogAddPages = ({ onSubmit }: Props) => {
       </form>
     </Dialog>
   );
-
-  return {
-    dialog,
-    handleOpen,
-    handleClose
-  };
 };
+
+export default AddPagesDialog;
