@@ -12,32 +12,38 @@ export const collections = [
       {
         id: '19a942a1-bbde-4f13-bd2e-cf27fa3a06be',
         creation_date: '25/03/2022',
-        name: 'Page 1.1'
+        name: 'Page 1.1',
+        children: []
       },
       {
         id: '1ad42f6f-43a9-4b80-a958-33bdc6f2b4db',
         creation_date: '25/03/2022',
-        name: 'Page 1.2'
+        name: 'Page 1.2',
+        children: []
       },
       {
         id: 'e1c5bdb5-fb37-42f9-9a4f-ea98ca38746f',
         creation_date: '25/03/2022',
-        name: 'Page 1.3'
+        name: 'Page 1.3',
+        children: []
       },
       {
         id: '57079cd0-f49b-4f98-8040-be82af56d91a',
         creation_date: '25/03/2022',
-        name: 'Page 1.4'
+        name: 'Page 1.4',
+        children: []
       },
       {
         id: '86e01c62-f7f5-4a24-afda-fa32f7a0d0c3',
         creation_date: '25/03/2022',
-        name: 'Page 1.5'
+        name: 'Page 1.5',
+        children: []
       },
       {
         id: '572a354b-e978-4377-8f11-585090a26a26',
         creation_date: '25/03/2022',
-        name: 'Page 1.6'
+        name: 'Page 1.6',
+        children: []
       }
     ]
   }
