@@ -33,6 +33,21 @@ libraryRouter.post('/collection', (req, res) => {
   res.status(200).send(collection);
 });
 
+// edit collection
+libraryRouter.patch('/collection/:id', (req, res) => {
+  const { id } = req.params;
+  currentLibrary = {
+    ...currentLibrary,
+    collections: currentLibrary.collections.map(c => ({
+      ...c,
+      ...(c.id === id && req.body)
+    }))
+  };
+  const currentCollection = currentLibrary.collections.find(c => c.id === id);
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(currentCollection);
+});
+
 // delete collection by id
 libraryRouter.delete('/collection/:id', (req, res) => {
   const { id } = req.params;
