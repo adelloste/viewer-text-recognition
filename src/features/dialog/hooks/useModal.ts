@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { ModalContext, ShowFn } from '../modal-context';
 
 export const useModal = (): { showModal: ShowFn } => {

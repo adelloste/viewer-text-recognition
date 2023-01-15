@@ -1,4 +1,4 @@
-import React, { ComponentType, createContext } from 'react';
+import { ComponentType, createContext } from 'react';
 
 export type ModalContextState = {
   state: State;
