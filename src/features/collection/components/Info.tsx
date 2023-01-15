@@ -3,6 +3,8 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -13,9 +15,12 @@ type Props = {
   collection: Collection;
   addPages: () => void;
   deleteCollection: (id: string) => void;
+  editCollection: (id: string, name: string, description: string) => void;
 };
 
-const Info = ({ collection, addPages, deleteCollection }: Props) => {
+const Info = ({ collection, addPages, editCollection, deleteCollection }: Props) => {
+  const { id, name, description, ...rest } = collection;
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ display: 'flex' }}>
@@ -23,8 +28,15 @@ const Info = ({ collection, addPages, deleteCollection }: Props) => {
           <Stack direction="row" alignItems="center" spacing={2} paddingBottom={3}>
             <FolderOpenIcon color="primary" />
             <Typography variant="h6" color="primary.main" gutterBottom>
-              {collection.name}
+              {name}
             </Typography>
+            <IconButton
+              aria-label="delete"
+              size="small"
+              onClick={() => editCollection(id, name, description)}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
           </Stack>
         </Box>
         <Box>
@@ -32,7 +44,7 @@ const Info = ({ collection, addPages, deleteCollection }: Props) => {
             variant="contained"
             endIcon={<DeleteOutlineIcon />}
             sx={{ textTransform: 'none' }}
-            onClick={() => deleteCollection(collection.id)}
+            onClick={() => deleteCollection(id)}
           >
             Delete Collection
           </Button>
@@ -40,19 +52,19 @@ const Info = ({ collection, addPages, deleteCollection }: Props) => {
       </Box>
       <Box sx={{ flexGrow: 1, color: 'text.secondary' }}>
         <Typography variant="body2" gutterBottom>
-          Creation Date: {collection.creation_date}
+          Creation Date: {rest.creation_date}
         </Typography>
         <Typography variant="body2" gutterBottom>
-          Last Update: {collection.last_update}
+          Last Update: {rest.last_update}
         </Typography>
         <Typography variant="body2" gutterBottom>
-          Pages: {collection.count_pages}
+          Pages: {rest.count_pages}
         </Typography>
         <Typography variant="body2" gutterBottom>
-          Lines: {collection.count_lines}
+          Lines: {rest.count_lines}
         </Typography>
         <Typography variant="body2" gutterBottom sx={{ py: 4 }}>
-          {collection.description}
+          {description}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex' }}>

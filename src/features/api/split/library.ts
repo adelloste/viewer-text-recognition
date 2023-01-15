@@ -39,6 +39,17 @@ export const libraryApi = api
           };
         }
       }),
+      updateCollectionById: builder.mutation<
+        Collection,
+        { id: string; data: Pick<Collection, 'name' | 'description'> }
+      >({
+        query: ({ id, data }) => ({
+          url: `library/collection/${id}`,
+          method: 'PATCH',
+          body: data
+        }),
+        invalidatesTags: ['Library', 'Collection']
+      }),
       deleteCollectionById: builder.mutation<void, { id: string }>({
         query: ({ id }) => ({
           url: `library/collection/${id}`,
@@ -83,6 +94,7 @@ export const {
   useGetLibraryQuery,
   useGetCollectionByIdQuery,
   useAddCollectionMutation,
+  useUpdateCollectionByIdMutation,
   useDeleteCollectionByIdMutation,
   useDeleteNodeByIdMutation,
   useUploadMutation,

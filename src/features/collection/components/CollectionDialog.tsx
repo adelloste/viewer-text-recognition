@@ -21,31 +21,33 @@ type FormValues = {
 };
 
 interface Props extends DialogProps {
+  description: string;
+  defaultValues?: FormValues;
   handleClose: (values: FormValues) => void;
 }
 
-const CreateCollectionDialog = ({ handleClose, ...props }: Props) => {
+const CollectionDialog = ({
+  handleClose,
+  title,
+  description,
+  defaultValues = { name: '', description: '' },
+  ...props
+}: Props) => {
   const {
     handleSubmit,
     control,
     formState: { errors }
   } = useForm<FormValues>({
-    defaultValues: {
-      name: '',
-      description: ''
-    },
+    defaultValues,
     resolver: yupResolver(schema)
   });
 
   return (
     <Dialog {...props} fullWidth={true} scroll="body">
-      <DialogTitle color="primary.main">Create new collection</DialogTitle>
+      <DialogTitle color="primary.main">{title}</DialogTitle>
       <form onSubmit={handleSubmit(data => handleClose(data))} autoComplete="off">
         <DialogContent>
-          <DialogContentText>
-            The collection will be initialized without any contents. You can add Pages to this
-            collection after completing its creation.
-          </DialogContentText>
+          <DialogContentText>{description}</DialogContentText>
           <Controller
             control={control}
             name="name"
@@ -87,4 +89,4 @@ const CreateCollectionDialog = ({ handleClose, ...props }: Props) => {
   );
 };
 
-export default CreateCollectionDialog;
+export default CollectionDialog;

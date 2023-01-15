@@ -17,7 +17,7 @@ import {
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import CollectionItem from './components/CollectionItem';
 import ConfirmDialog from '../../common/components/ConfirmDialog/ConfirmDialog';
-import CreateCollectionDialog from './components/CreateCollectionDialog';
+import CollectionDialog from '../collection/components/CollectionDialog';
 import { useModal } from '../dialog/hooks/useModal';
 
 const Library = () => {
@@ -26,12 +26,15 @@ const Library = () => {
     refetchOnMountOrArgChange: true
   });
   const [addCollection] = useAddCollectionMutation();
-  const [deleteCollection] = useDeleteCollectionByIdMutation();
+  const [deleteCollectionBy] = useDeleteCollectionByIdMutation();
   const [downloadCollection] = useDownloadMutation();
   const { showModal } = useModal();
 
   const handleCreateCollection = () => {
-    const { hide } = showModal(CreateCollectionDialog, {
+    const { hide } = showModal(CollectionDialog, {
+      title: 'Create new collection',
+      description:
+        'The collection will be initialized without any contents. You can add Pages to this collection after completing its creation',
       handleClose: data => {
         hide();
 
@@ -49,12 +52,12 @@ const Library = () => {
   const handleDelete = (id: string) => {
     const { hide } = showModal(ConfirmDialog, {
       title: 'Delete collection',
-      description: 'Do you really want to delete this collection? The process cannot be undone.',
+      description: 'Do you really want to delete this collection? The process cannot be undone',
       handleClose: status => {
         hide();
 
         if (status) {
-          void deleteCollection({ id });
+          void deleteCollectionBy({ id });
         }
       }
     });

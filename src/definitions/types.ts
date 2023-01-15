@@ -52,7 +52,7 @@ export type Collection = {
   creation_date: string;
   last_update: string;
   children: Collection[];
-  description?: string;
+  description: string;
   count_pages?: number;
   count_lines?: number;
 } & {

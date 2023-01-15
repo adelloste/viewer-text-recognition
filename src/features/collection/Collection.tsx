@@ -8,10 +8,12 @@ import ListItems from './components/ListItems';
 import Info from './components/Info';
 import AddPagesDialog from './components/AddPagesDialog';
 import ConfirmDialog from '../../common/components/ConfirmDialog/ConfirmDialog';
+import CollectionDialog from './components/CollectionDialog';
 import {
   useDeleteCollectionByIdMutation,
   useDeleteNodeByIdMutation,
   useGetCollectionByIdQuery,
+  useUpdateCollectionByIdMutation,
   useUploadMutation
 } from '../api/split/library';
 import { useModal } from '../dialog/hooks/useModal';
@@ -22,7 +24,8 @@ const Collection = () => {
   const { id } = useParams();
   const { showModal } = useModal();
   const { data, isLoading } = useGetCollectionByIdQuery({ id });
-  const [deleteCollection] = useDeleteCollectionByIdMutation();
+  const [updateCollectionById] = useUpdateCollectionByIdMutation();
+  const [deleteCollectionById] = useDeleteCollectionByIdMutation();
   const [deleteNodeById] = useDeleteNodeByIdMutation();
   const [upload] = useUploadMutation();
 
@@ -53,9 +56,27 @@ const Collection = () => {
         hide();
 
         if (status) {
-          void deleteCollection({ id })
+          void deleteCollectionById({ id })
             .unwrap()
             .then(() => navigate('/main/library', { replace: true }));
+        }
+      }
+    });
+  };
+
+  const handleEdit = (id: string, name: string, description: string) => {
+    const { hide } = showModal(CollectionDialog, {
+      title: 'Update collection',
+      description: 'The collection will be updated with the below data',
+      defaultValues: {
+        name,
+        description
+      },
+      handleClose: data => {
+        hide();
+
+        if (data) {
+          void updateCollectionById({ id, data });
         }
       }
     });
@@ -101,7 +122,12 @@ const Collection = () => {
             </Box>
           </Drawer>
           <Box sx={{ flexGrow: 1, p: 3 }}>
-            <Info collection={data} addPages={handleAddPages} deleteCollection={handleDelete} />
+            <Info
+              collection={data}
+              addPages={handleAddPages}
+              editCollection={handleEdit}
+              deleteCollection={handleDelete}
+            />
           </Box>
         </Box>
       )}
