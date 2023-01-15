@@ -1,7 +1,7 @@
 {
   "name": "viewer-text-recognition",
   "version": "0.1.0",
-  "description": "Matrices",
+  "description": "Viewer text recognition",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adelloste/viewer-text-recognition"
