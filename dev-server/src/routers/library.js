@@ -47,9 +47,33 @@ libraryRouter.delete('/collection/:id', (req, res) => {
 // get collection by id
 libraryRouter.get('/collection/:id', (req, res) => {
   const { id } = req.params;
-  const currentCollection = currentLibrary.collections.filter(c => c.id === id);
+  const currentCollection = currentLibrary.collections.find(c => c.id === id);
   res.setHeader('content-type', 'application/json');
   res.status(200).send(currentCollection);
+});
+
+// delete node by id form collection
+const recursiveRemove = (list, id) => {
+  return list
+    .map(item => {
+      return { ...item };
+    })
+    .filter(item => {
+      if ('children' in item) {
+        item.children = recursiveRemove(item.children, id);
+      }
+      return item.id !== id;
+    });
+};
+
+libraryRouter.delete('/collection/:idCollection/node/:idNode', (req, res) => {
+  const { idCollection, idNode } = req.params;
+  currentLibrary = {
+    ...currentLibrary,
+    collections: recursiveRemove(currentLibrary.collections, idNode)
+  };
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(currentLibrary);
 });
 
 // upload file
