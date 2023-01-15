@@ -9,8 +9,9 @@ import Info from './components/Info';
 import AddPagesDialog from './components/AddPagesDialog';
 import ConfirmDialog from '../../common/components/ConfirmDialog/ConfirmDialog';
 import {
-  useDeleteCollectionMutation,
-  useGetCollectionQuery,
+  useDeleteCollectionByIdMutation,
+  useDeleteNodeByIdMutation,
+  useGetCollectionByIdQuery,
   useUploadMutation
 } from '../api/split/library';
 import { useModal } from '../dialog/hooks/useModal';
@@ -20,8 +21,9 @@ const Collection = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { showModal } = useModal();
-  const { data, isLoading } = useGetCollectionQuery({ id });
-  const [deleteCollection] = useDeleteCollectionMutation();
+  const { data, isLoading } = useGetCollectionByIdQuery({ id });
+  const [deleteCollection] = useDeleteCollectionByIdMutation();
+  const [deleteNodeById] = useDeleteNodeByIdMutation();
   const [upload] = useUploadMutation();
 
   const handleAddPages = () => {
@@ -46,7 +48,7 @@ const Collection = () => {
   const handleDelete = (id: string) => {
     const { hide } = showModal(ConfirmDialog, {
       title: 'Delete collection',
-      description: 'Do you really want to delete this collection? The process cannot be undone.',
+      description: 'Do you really want to delete this collection? The process cannot be undone',
       handleClose: status => {
         hide();
 
@@ -54,6 +56,24 @@ const Collection = () => {
           void deleteCollection({ id })
             .unwrap()
             .then(() => navigate('/main/library', { replace: true }));
+        }
+      }
+    });
+  };
+
+  const handleOpenPage = (id: string) => {
+    navigate(`/main/transcription/${id}`);
+  };
+
+  const handleDeletePage = (idCollection: string, idNode: string) => {
+    const { hide } = showModal(ConfirmDialog, {
+      title: 'Delete item',
+      description: 'Do you really want to delete this item? The process cannot be undone',
+      handleClose: status => {
+        hide();
+
+        if (status) {
+          void deleteNodeById({ idCollection, idNode });
         }
       }
     });
@@ -73,11 +93,15 @@ const Collection = () => {
           >
             <Toolbar variant="dense" />
             <Box sx={{ overflow: 'auto' }}>
-              <ListItems collections={data} />
+              <ListItems
+                collection={data}
+                openPage={handleOpenPage}
+                deletePage={handleDeletePage}
+              />
             </Box>
           </Drawer>
           <Box sx={{ flexGrow: 1, p: 3 }}>
-            <Info collection={data[0]} addPages={handleAddPages} deleteCollection={handleDelete} />
+            <Info collection={data} addPages={handleAddPages} deleteCollection={handleDelete} />
           </Box>
         </Box>
       )}

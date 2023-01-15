@@ -20,16 +20,38 @@ export const libraryApi = api
         }),
         invalidatesTags: ['Library']
       }),
-      getCollection: builder.query<Collection[], { id: string | undefined }>({
+      getCollectionById: builder.query<Collection, { id: string | undefined }>({
         query: ({ id }) => `library/collection/${id}`,
-        providesTags: ['Collection']
+        providesTags: ['Collection'],
+        transformResponse: (response: Collection) => {
+          // recursively add isChild prop
+          const addIsChild = (items: Collection[]): Collection[] =>
+            items.map(({ children, ...rest }) => ({
+              ...rest,
+              children: addIsChild(children),
+              isChild: Array.isArray(children) && children.length === 0
+            }));
+
+          return {
+            ...response,
+            isChild: false,
+            children: addIsChild(response.children)
+          };
+        }
       }),
-      deleteCollection: builder.mutation<void, { id: string }>({
+      deleteCollectionById: builder.mutation<void, { id: string }>({
         query: ({ id }) => ({
           url: `library/collection/${id}`,
           method: 'DELETE'
         }),
         invalidatesTags: ['Library']
+      }),
+      deleteNodeById: builder.mutation<void, { idCollection: string; idNode: string }>({
+        query: ({ idCollection, idNode }) => ({
+          url: `library/collection/${idCollection}/node/${idNode}`,
+          method: 'DELETE'
+        }),
+        invalidatesTags: ['Collection']
       }),
       upload: builder.mutation<void, { id: string | undefined; data: FormData }>({
         query: ({ id, data }) => ({
@@ -59,9 +81,10 @@ export const libraryApi = api
 
 export const {
   useGetLibraryQuery,
-  useGetCollectionQuery,
+  useGetCollectionByIdQuery,
   useAddCollectionMutation,
-  useDeleteCollectionMutation,
+  useDeleteCollectionByIdMutation,
+  useDeleteNodeByIdMutation,
   useUploadMutation,
   useDownloadMutation
 } = libraryApi;

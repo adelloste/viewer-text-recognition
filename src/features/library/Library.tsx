@@ -10,7 +10,7 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import {
   useAddCollectionMutation,
-  useDeleteCollectionMutation,
+  useDeleteCollectionByIdMutation,
   useDownloadMutation,
   useGetLibraryQuery
 } from '../api/split/library';
@@ -26,7 +26,7 @@ const Library = () => {
     refetchOnMountOrArgChange: true
   });
   const [addCollection] = useAddCollectionMutation();
-  const [deleteCollection] = useDeleteCollectionMutation();
+  const [deleteCollection] = useDeleteCollectionByIdMutation();
   const [downloadCollection] = useDownloadMutation();
   const { showModal } = useModal();
 

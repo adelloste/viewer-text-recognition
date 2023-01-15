@@ -55,4 +55,6 @@ export type Collection = {
   description?: string;
   count_pages?: number;
   count_lines?: number;
+} & {
+  isChild: boolean;
 };
