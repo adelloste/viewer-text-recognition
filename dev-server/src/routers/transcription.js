@@ -11,16 +11,16 @@ transcriptionRouter.get('/:id', (req, res) => {
   res.status(200).send(currentTranscription);
 });
 
-// get transcription's segmentations by id
-transcriptionRouter.get('/:id/segmentations', (req, res) => {
+// add segmentations to transcription
+transcriptionRouter.patch('/:id/segmentations', (req, res) => {
   res.setHeader('content-type', 'application/json');
   res.status(200).send(currentTranscription);
 });
 
-// get transcription's annotations by id
-transcriptionRouter.get('/:id/annotations', (req, res) => {
+// add annotations to transcription
+transcriptionRouter.patch('/:id/annotations', (req, res) => {
   res.setHeader('content-type', 'application/json');
-  res.status(200).send(currentTranscription.annotations);
+  res.status(200).send(currentTranscription);
 });
 
 // update transcription
