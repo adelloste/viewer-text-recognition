@@ -28,10 +28,13 @@ transcriptionRouter.post('/:id', (req, res) => {
   const itemId = req.params.id;
   const data = req.body;
 
-  currentTranscription = {
-    ...currentTranscription,
-    annotations: [...data]
-  };
+  currentTranscription = data;
   res.setHeader('content-type', 'application/json');
-  res.status(200).send();
+  res.status(200).send(data);
+});
+
+// donwload transcription
+transcriptionRouter.get('/transcription/:id/download', (req, res) => {
+  const file = `${assets}/dummy.pdf`;
+  res.download(file);
 });

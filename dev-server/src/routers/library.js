@@ -100,7 +100,7 @@ libraryRouter.post('/collection/:id/upload', upload.any(), (req, res) => {
   res.status(200).send();
 });
 
-// donwload file
+// donwload collection
 libraryRouter.get('/collection/:id/download', (req, res) => {
   const file = `${assets}/dummy.pdf`;
   res.download(file);
