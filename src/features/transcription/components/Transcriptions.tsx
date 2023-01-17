@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Transcriptions = ({ resource, deletedAnnotation, handleUpdateAnnotations }: Props) => {
-  const { control, getValues, watch } = useForm({
+  const { control, getValues, watch, reset } = useForm({
     defaultValues: {
       annotations: [...resource.annotations]
     }
@@ -38,6 +38,10 @@ const Transcriptions = ({ resource, deletedAnnotation, handleUpdateAnnotations }
       remove(index);
     }
   }, [deletedAnnotation, getValues, remove]);
+
+  useEffect(() => {
+    reset({ annotations: resource.annotations });
+  }, [resource, reset]);
 
   return (
     <Box component="form" noValidate autoComplete="off">

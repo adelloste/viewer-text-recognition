@@ -5,11 +5,14 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Drawer from '@mui/material/Drawer';
 import {
+  useDownloadTranscriptionMutation,
   useGetTranscriptionQuery,
+  useUpdateAnnotationsMutation,
+  useUpdateSegmentationsMutation,
   useUpdateTranscriptionMutation
 } from '../api/split/transcription';
 import { useAppDispatch, useAppSelector } from '../../common/hooks/useApp';
-import { updateSegmentations, updateAnnotations, deleteAnnotation } from './transcriptionSlice';
+import { modifySegmentations, modifyAnnotations, deleteAnnotation } from './transcriptionSlice';
 import MainLayout from '../../common/components/MainLayout/MainLayout';
 import Viewer from '../../common/components/Viewer/Viewer';
 import Transcriptions from './components/Transcriptions';
@@ -28,17 +31,22 @@ const Page = ({ id, data }: Props) => {
   const annotations = useAppSelector(store => store.transcription.annotations);
   const deletedAnnotation = useAppSelector(store => store.transcription.deletedAnnotation);
   const [updateTranscription] = useUpdateTranscriptionMutation();
+  const [updateSegmentations] = useUpdateSegmentationsMutation();
+  const [updateAnnotations] = useUpdateAnnotationsMutation();
+  const [downloadTranscription] = useDownloadTranscriptionMutation();
 
-  const debounceUpdateSegmentations = useDebouncedCallback((id: string, coords: number[]) => {
-    dispatch(updateSegmentations({ id, coords }));
+  const debounceModifySegmentations = useDebouncedCallback((id: string, coords: number[]) => {
+    dispatch(modifySegmentations({ id, coords }));
   }, delay);
 
-  const debounceUpdateAnnotations = useDebouncedCallback((items: Annotation[]) => {
-    dispatch(updateAnnotations(items));
+  const debounceModifyAnnotations = useDebouncedCallback((items: Annotation[]) => {
+    dispatch(modifyAnnotations(items));
   }, delay);
 
-  const save = async () => {
-    void updateTranscription({ id, annotations })
+  const save = () => {
+    const transcription = { ...data, annotations };
+
+    void updateTranscription({ id, transcription })
       .unwrap()
       .then(() =>
         dispatch(
@@ -52,7 +60,15 @@ const Page = ({ id, data }: Props) => {
   };
 
   const download = () => {
-    // TODO
+    void downloadTranscription({ id });
+  };
+
+  const handleAutoSegment = () => {
+    void updateSegmentations({ id });
+  };
+
+  const handleAutoTranscribe = () => {
+    void updateAnnotations({ id });
   };
 
   const handleDeleteAnnotation = (id: string) => {
@@ -61,22 +77,27 @@ const Page = ({ id, data }: Props) => {
 
   const handleUpdateSegmentations = useCallback(
     (id: string, coords: number[]) => {
-      debounceUpdateSegmentations(id, coords);
+      debounceModifySegmentations(id, coords);
     },
-    [debounceUpdateSegmentations]
+    [debounceModifySegmentations]
   );
 
   const handleUpdateAnnotations = useCallback(
     (items: Annotation[]) => {
-      debounceUpdateAnnotations(items);
+      debounceModifyAnnotations(items);
     },
-    [debounceUpdateAnnotations]
+    [debounceModifyAnnotations]
   );
 
   return (
     <Box sx={{ display: 'flex', height: '100%' }}>
       <Box sx={{ flexGrow: 1, position: 'relative' }}>
-        <EditorOverlay save={save} download={download} />
+        <EditorOverlay
+          save={save}
+          download={download}
+          autoSegment={handleAutoSegment}
+          autoTranscribe={handleAutoTranscribe}
+        />
         <Viewer
           resource={data}
           handleDeleteAnnotation={handleDeleteAnnotation}

@@ -19,6 +19,7 @@ type Props = {
 };
 
 const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }: Props) => {
+  const [viewer, setViewer] = useState<OpenSeadragon.Viewer | null>(null);
   const [overlay, setOverlay] = useState<any | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     target: fabric.Polygon;
@@ -93,6 +94,7 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
           fabricObject.calcTransformMatrix()
         );
         const actionPerformed = fn(eventData, transform, x, y, pointIndex);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const newDim = fabricObject._setPositionDimensions({});
         const polygonBaseSize = getObjectSizeWithStroke(fabricObject);
         const newX =
@@ -171,6 +173,7 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
         clickToZoom: false
       }
     });
+    setViewer(viewer);
     // raised when an item is added to the World
     viewer.world.addHandler('add-item', addItemEvent => {
       const tiledImage = addItemEvent.item;
@@ -178,94 +181,9 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
       tiledImage.addHandler('fully-loaded-change', () => {
         // Initialize overlay
         const overlay = viewer.fabricjsOverlay<fabric.Canvas>({
-          scale: resource.images[0].width // Maybe should we have one image?
+          scale: resource.images[0].width
         });
         setOverlay(overlay);
-        // draw polygons for every segmentation
-        resource.annotations.forEach(annotation => {
-          // create polygon
-          const polygon = new fabric.Polygon(segmentation(annotation.segmentation), {
-            fill: 'rgba(25,48,96,.1)',
-            stroke: 'green',
-            // fill: 'transparent',
-            // stroke: 'transparent',
-            strokeWidth: 4,
-            objectCaching: false,
-            hasBorders: false,
-            cornerColor: 'rgba(0,0,255,0.5)',
-            cornerStyle: 'circle',
-            transparentCorners: false,
-            selectable: false,
-            lockMovementX: true, // stop dragging x axis
-            lockMovementY: true, // stop dragging y axis
-            hoverCursor: 'pointer',
-            name: `segmentation-${annotation.id}`,
-            data: {
-              id: annotation.id,
-              isSelected: false
-            }
-          });
-          // observe mousedown event
-          polygon.on('mousedown', (e: fabric.IEvent<Event>) => {
-            if (e.target) {
-              // get polygon
-              const poly = e.target as fabric.Polygon;
-              // active polygon
-              overlay.fabricCanvas().setActiveObject(poly);
-              // enable edit mode
-              enableEditMode(poly);
-              // update canvas
-              overlay.render();
-              // Don't remove it yet
-              // // center the clicked polygon
-              // if (e.target.aCoords) {
-              //   const bb = viewer.viewport.imageToViewportRectangle(
-              //     e.target.aCoords.tl.x,
-              //     e.target.aCoords.tl.y,
-              //     e.target.width,
-              //     e.target.height
-              //   );
-              //   viewer.viewport.fitBounds(bb);
-              //   // alternative
-              //   // viewer.viewport.panTo(bb.getCenter());
-              // }
-              // // get all objects
-              // const objs = overlay.fabricCanvas().getObjects();
-              // // for every object track event click and update style
-              // objs.forEach(o => {
-              //   if (o.name === e.target?.name) {
-              //     o.data.isSelected = true;
-              //     o.set('fill', 'rgba(25,48,96,.1)');
-              //     o.set('stroke', 'green');
-              //   } else {
-              //     o.data.isSelected = false;
-              //     o.set('fill', 'transparent');
-              //     o.set('stroke', 'transparent');
-              //   }
-              // });
-            }
-          });
-          // add polygon
-          overlay.fabricCanvas().add(polygon);
-
-          // Don't remove it yet
-          // overlay.fabricCanvas().on('mouse:over', (e: fabric.IEvent<MouseEvent>) => {
-          //   if (e.target) {
-          //     e.target.set('fill', 'rgba(25,48,96,.1)');
-          //     e.target.set('stroke', 'green');
-          //     overlay.render();
-          //   }
-          // });
-          // overlay.fabricCanvas().on('mouse:out', (e: fabric.IEvent<MouseEvent>) => {
-          //   if (e.target) {
-          //     if (!e.target.data.isSelected) {
-          //       e.target.set('fill', 'transparent');
-          //       e.target.set('stroke', 'transparent');
-          //       overlay.render();
-          //     }
-          //   }
-          // });
-        });
         // capture right click event
         // open custom menu
         fabric.util.addListener(
@@ -290,7 +208,54 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
     return () => {
       viewer.destroy();
     };
-  }, [resource.images, resource.annotations, enableEditMode]);
+  }, [resource.images[0].file_path]);
+
+  useEffect(() => {
+    if (viewer) {
+      // clear all polygon
+      overlay.clear();
+      // draw polygons for every segmentation
+      resource.annotations.forEach(annotation => {
+        // create polygon
+        const polygon = new fabric.Polygon(segmentation(annotation.segmentation), {
+          fill: 'rgba(25,48,96,.1)',
+          stroke: 'green',
+          // fill: 'transparent',
+          // stroke: 'transparent',
+          strokeWidth: 4,
+          objectCaching: false,
+          hasBorders: false,
+          cornerColor: 'rgba(0,0,255,0.5)',
+          cornerStyle: 'circle',
+          transparentCorners: false,
+          selectable: false,
+          lockMovementX: true, // stop dragging x axis
+          lockMovementY: true, // stop dragging y axis
+          hoverCursor: 'pointer',
+          name: `segmentation-${annotation.id}`,
+          data: {
+            id: annotation.id,
+            isSelected: false
+          }
+        });
+        // observe mousedown event
+        polygon.on('mousedown', (e: fabric.IEvent<Event>) => {
+          if (e.target) {
+            // get polygon
+            const poly = e.target as fabric.Polygon;
+            // active polygon
+            overlay.fabricCanvas().setActiveObject(poly);
+            // enable edit mode
+            enableEditMode(poly);
+            // update canvas
+            overlay.render();
+          }
+        });
+        // add polygon
+        overlay.fabricCanvas().add(polygon);
+      });
+    }
+  }, [resource, enableEditMode]);
 
   return (
     <Box style={{ position: 'relative', height: '100%', width: '100%' }}>

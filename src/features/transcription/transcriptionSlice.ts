@@ -16,7 +16,7 @@ const transcriptionSlice = createSlice({
   name: 'transcription',
   initialState,
   reducers: {
-    updateSegmentations(state, action: PayloadAction<{ id: string; coords: number[] }>) {
+    modifySegmentations(state, action: PayloadAction<{ id: string; coords: number[] }>) {
       const { id, coords } = action.payload;
 
       state.annotations = state.annotations.reduce((result: Annotation[], value) => {
@@ -26,7 +26,7 @@ const transcriptionSlice = createSlice({
         return [...result, value];
       }, []);
     },
-    updateAnnotations(state, action: PayloadAction<Annotation[]>) {
+    modifyAnnotations(state, action: PayloadAction<Annotation[]>) {
       state.annotations = action.payload.reduce((result: Annotation[], value) => {
         const item = state.annotations.find(a => a.id === value.id);
         if (item) {
@@ -47,6 +47,18 @@ const transcriptionSlice = createSlice({
         state.annotations = payload.annotations;
       }
     );
+    builder.addMatcher(
+      transcriptionApi.endpoints.updateSegmentations.matchFulfilled,
+      (state, { payload }) => {
+        state.annotations = payload.annotations;
+      }
+    );
+    builder.addMatcher(
+      transcriptionApi.endpoints.updateAnnotations.matchFulfilled,
+      (state, { payload }) => {
+        state.annotations = payload.annotations;
+      }
+    );
     builder.addMatcher(transcriptionApi.endpoints.updateTranscription.matchFulfilled, state => {
       state.deletedAnnotation = undefined;
     });
@@ -55,5 +67,5 @@ const transcriptionSlice = createSlice({
 
 export default transcriptionSlice.reducer;
 
-export const { updateSegmentations, updateAnnotations, deleteAnnotation } =
+export const { modifySegmentations, modifyAnnotations, deleteAnnotation } =
   transcriptionSlice.actions;
