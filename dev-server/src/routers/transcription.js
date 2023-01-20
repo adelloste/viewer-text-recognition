@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { assets } from '../config';
 import { transcription } from '../payloads/data-transcription';
 
 export const transcriptionRouter = Router();
@@ -34,7 +35,7 @@ transcriptionRouter.post('/:id', (req, res) => {
 });
 
 // donwload transcription
-transcriptionRouter.get('/transcription/:id/download', (req, res) => {
+transcriptionRouter.get('/:id/download', (req, res) => {
   const file = `${assets}/dummy.pdf`;
   res.download(file);
 });
