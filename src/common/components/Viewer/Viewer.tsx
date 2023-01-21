@@ -220,8 +220,6 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
         const polygon = new fabric.Polygon(segmentation(annotation.segmentation), {
           fill: 'rgba(25,48,96,.1)',
           stroke: 'green',
-          // fill: 'transparent',
-          // stroke: 'transparent',
           strokeWidth: 4,
           objectCaching: false,
           hasBorders: false,
@@ -232,6 +230,7 @@ const Viewer = ({ resource, handleDeleteAnnotation, handleUpdateSegmentations }:
           lockMovementX: true, // stop dragging x axis
           lockMovementY: true, // stop dragging y axis
           hoverCursor: 'pointer',
+          perPixelTargetFind: true,
           name: `segmentation-${annotation.id}`,
           data: {
             id: annotation.id,
