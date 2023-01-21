@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./dev-server
+      dockerfile: Dockerfile
+    image: adelloste/matrices-be
+    ports:
+      - '8080:8080'
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: adelloste/matrices-fe
+    ports:
+      - "3000:80"
