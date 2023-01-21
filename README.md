@@ -14,5 +14,5 @@ The node version used in this project is stored in [.nvmrc](.nvmrc).
 ## Setup
 
 - clone this repository
-- install all packages needed: `npm install`
-- you are ready! start the app: `npm run start`
+- install all packages needed: `yarn install`
+- you are ready! start the app: `yarn start`

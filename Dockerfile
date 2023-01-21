@@ -3,13 +3,15 @@ FROM node:14 as build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
+COPY patches ./patches
 
-RUN npm ci --only=production
+RUN yarn
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
 # Stage 2: build an nginx container
 FROM nginx:stable-alpine
