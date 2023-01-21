@@ -4,9 +4,10 @@ FROM node:14-alpine
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm ci --only=production
+RUN yarn
 
 # Bundle app source
 COPY . .

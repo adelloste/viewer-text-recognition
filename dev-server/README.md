@@ -4,5 +4,5 @@ It's simple mock server for matrices.
 
 ## Setup
 
-- `npm intall`
-- `npm run dev`
+- `yarn intall`
+- `yarn dev`
